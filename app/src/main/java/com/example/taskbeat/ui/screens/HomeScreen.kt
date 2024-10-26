@@ -45,9 +45,6 @@ fun HomeScreen(
     navCtrl: NavController,
     homeVM: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val displayList: List<String> by homeVM.displayList.collectAsState()
-    val type: String by homeVM.type.collectAsState()
-
     Scaffold(
         topBar = {
             TopBar(
@@ -62,87 +59,41 @@ fun HomeScreen(
                 .background(MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start
-            ) {
+            Column {
                 Box(
-                    contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(10.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(
-                            if (type == "party")
-                                MaterialTheme.colorScheme.tertiary
-                            else
-                                MaterialTheme.colorScheme.secondaryContainer,
-                            RoundedCornerShape(20.dp)
-                        )
-                        .clickable { homeVM.setSortType("party") }
                         .padding(8.dp)
+                        .size(120.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { navCtrl.navigate(EnumScreens.REMINDERS_LIST.route) }
+                        .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp)),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "Party",
-                        color = if (type == "party")
-                                MaterialTheme.colorScheme.onTertiary
-                            else
-                                MaterialTheme.colorScheme.onSecondaryContainer,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Text("Add a reminder")
                 }
 
                 Box(
-                    contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(10.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(
-                            if (type == "constituency")
-                                MaterialTheme.colorScheme.tertiary
-                            else
-                                MaterialTheme.colorScheme.secondaryContainer,
-                            RoundedCornerShape(20.dp)
-                        )
-                        .clickable { homeVM.setSortType("constituency") }
                         .padding(8.dp)
+                        .size(120.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { navCtrl.navigate(EnumScreens.HEART_RATE.route) }
+                        .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp)),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "Constituency",
-                        color = if (type == "constituency")
-                                MaterialTheme.colorScheme.onTertiary
-                            else
-                                MaterialTheme.colorScheme.onSecondaryContainer,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Text("Heart Rate")
                 }
-            }
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-            ) {
-                items(displayList) {
-                    Box(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .size(120.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .clickable { navCtrl.navigate(EnumScreens.MEMBERLIST.withParams(type, it.toString())) }
-                            .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp))
-                    ) {
-                        Text(
-                            text = when (type) {
-                                "party" -> it.uppercase()
-                                "constituency" -> it.replaceFirstChar { char -> char.uppercase() }.replace("-", "-\n")
-                                else -> it
-                            },
-                            color = MaterialTheme.colorScheme.onTertiaryContainer,
-                            modifier = Modifier.align(Alignment.Center).padding(8.dp)
-                        )
-                    }
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .size(120.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { navCtrl.navigate(EnumScreens.SETTINGS.route) }
+                        .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Settings")
                 }
             }
         }

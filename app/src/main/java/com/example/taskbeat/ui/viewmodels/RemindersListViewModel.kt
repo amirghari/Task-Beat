@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
-class MemberListViewModel(
+class RemindersListViewModel(
     savedStateHandle: SavedStateHandle,
     private val dataRepo: DataRepository,
 ) : ViewModel() {

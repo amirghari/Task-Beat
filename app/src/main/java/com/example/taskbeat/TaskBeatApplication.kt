@@ -31,38 +31,38 @@ class TaskBeatApplication: Application(), Configuration.Provider {
         super.onCreate()
         container = AppDataContainer(this, dataStore)
         WorkManager.initialize(this, workManagerConfiguration)
-        updateDataOnCreate()
-        schedulePeriodicFetchAndUpdateWork()
+//        updateDataOnCreate()
+//        schedulePeriodicFetchAndUpdateWork()
     }
 
-    private fun updateDataOnCreate() {
-        val fetchAndUpdateDBWorkRequest = OneTimeWorkRequestBuilder<FetchAndUpdateDBWorker>()
-            .setConstraints(
-                Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                    .build()
-            )
-            .build()
-
-        WorkManager.getInstance(this).enqueue(fetchAndUpdateDBWorkRequest)
-    }
-
-    private fun schedulePeriodicFetchAndUpdateWork() {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(true)
-            .build()
-
-        val periodicWorkRequest = PeriodicWorkRequestBuilder<FetchAndUpdateDBWorker>(24, TimeUnit.HOURS)
-            .setConstraints(constraints)
-            .build()
-
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            "FetchAndUpdateDBWorker",
-            ExistingPeriodicWorkPolicy.KEEP,
-            periodicWorkRequest
-        )
-    }
+//    private fun updateDataOnCreate() {
+//        val fetchAndUpdateDBWorkRequest = OneTimeWorkRequestBuilder<FetchAndUpdateDBWorker>()
+//            .setConstraints(
+//                Constraints.Builder()
+//                    .setRequiredNetworkType(NetworkType.CONNECTED)
+//                    .build()
+//            )
+//            .build()
+//
+//        WorkManager.getInstance(this).enqueue(fetchAndUpdateDBWorkRequest)
+//    }
+//
+//    private fun schedulePeriodicFetchAndUpdateWork() {
+//        val constraints = Constraints.Builder()
+//            .setRequiredNetworkType(NetworkType.CONNECTED)
+//            .setRequiresBatteryNotLow(true)
+//            .build()
+//
+//        val periodicWorkRequest = PeriodicWorkRequestBuilder<FetchAndUpdateDBWorker>(24, TimeUnit.HOURS)
+//            .setConstraints(constraints)
+//            .build()
+//
+//        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+//            "FetchAndUpdateDBWorker",
+//            ExistingPeriodicWorkPolicy.KEEP,
+//            periodicWorkRequest
+//        )
+//    }
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()

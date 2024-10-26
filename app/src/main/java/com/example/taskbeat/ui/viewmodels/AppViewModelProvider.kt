@@ -19,21 +19,27 @@ object AppViewModelProvider {
         }
 
         initializer {
-            MemberListViewModel(
+            SettingsViewModel(
+                pmApplication().container.dataRepo
+            )
+        }
+
+        initializer {
+            RemindersListViewModel(
                 this.createSavedStateHandle(),
                 pmApplication().container.dataRepo,
             )
         }
 
         initializer {
-            MemberViewModel(
+            ReminderViewModel(
                 this.createSavedStateHandle(),
                 pmApplication().container.dataRepo
             )
         }
 
         initializer {
-            NoteViewModel(
+            HeartRateViewModel(
                 this.createSavedStateHandle(),
                 pmApplication().container.dataRepo
             )
