@@ -1,7 +1,6 @@
 package com.example.taskbeat.ui.viewmodels
 
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -12,6 +11,12 @@ fun CreationExtras.pmApplication(): TaskBeatApplication =
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
+        initializer {
+            TopBarViewModel(
+                pmApplication().container.dataRepo
+            )
+        }
+
         initializer {
             HomeViewModel(
                 pmApplication().container.dataRepo
@@ -25,28 +30,43 @@ object AppViewModelProvider {
         }
 
         initializer {
-            RemindersListViewModel(
-                this.createSavedStateHandle(),
-                pmApplication().container.dataRepo,
+            StepsCounterViewModel(
+                pmApplication().container.dataRepo
             )
         }
 
         initializer {
-            ReminderViewModel(
-                this.createSavedStateHandle(),
+            WorkoutTimeViewModel(
                 pmApplication().container.dataRepo
             )
         }
 
         initializer {
             HeartRateViewModel(
-                this.createSavedStateHandle(),
                 pmApplication().container.dataRepo
             )
         }
 
         initializer {
-            TopBarViewModel(
+            BodyCompositionViewModel(
+                pmApplication().container.dataRepo
+            )
+        }
+
+        initializer {
+            WaterViewModel(
+                pmApplication().container.dataRepo
+            )
+        }
+
+        initializer {
+            BloodPressureViewModel(
+                pmApplication().container.dataRepo
+            )
+        }
+
+        initializer {
+            BloodGlucoseViewModel(
                 pmApplication().container.dataRepo
             )
         }

@@ -12,10 +12,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -45,6 +49,17 @@ fun HomeScreen(
     navCtrl: NavController,
     homeVM: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val screens = listOf(
+        EnumScreens.STEPS_COUNTER,
+        EnumScreens.WORKOUT_TIME,
+        EnumScreens.HEART_RATE,
+        EnumScreens.BODY_COMPOSITION,
+        EnumScreens.WATER,
+        EnumScreens.BLOOD_PRESSURE,
+        EnumScreens.BLOOD_GLUCOSE,
+        EnumScreens.SETTINGS,
+    )
+
     Scaffold(
         topBar = {
             TopBar(
@@ -54,48 +69,33 @@ fun HomeScreen(
             )
         }
     ) { paddingValues ->
-        Column(
+        LazyColumn(
             modifier = Modifier.padding(paddingValues)
                 .background(MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
         ) {
-            Column {
-                Box(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .size(120.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable { navCtrl.navigate(EnumScreens.REMINDERS_LIST.route) }
-                        .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Add a reminder")
-                }
-
-                Box(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .size(120.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable { navCtrl.navigate(EnumScreens.HEART_RATE.route) }
-                        .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Heart Rate")
-                }
-
-                Box(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .size(120.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable { navCtrl.navigate(EnumScreens.SETTINGS.route) }
-                        .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Settings")
-                }
+            items(screens) { screen ->
+                HomeItemBox(screen.route) { navCtrl.navigate(screen.route) }
             }
         }
+    }
+}
+
+@Composable
+fun HomeItemBox(
+    screen: String,
+    navigateToScreen: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .size(120.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .clickable { navigateToScreen() }
+            .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(screen)
     }
 }

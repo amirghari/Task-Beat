@@ -7,20 +7,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
-import com.example.taskbeat.ui.viewmodels.ReminderViewModel
+import com.example.taskbeat.ui.viewmodels.StepsCounterViewModel
 
 @Composable
-fun ReminderScreen(
+fun StepsCounterScreen(
     navCtrl: NavController,
-    reminderVM: ReminderViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    stepsCounterVM: StepsCounterViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     Scaffold(
         topBar = {
             TopBar(
-                title = "Reminder",
+                title = "",
                 canNavigateBack = true,
                 onNavigateUp = { navCtrl.navigateUp() }
             )
@@ -29,7 +30,7 @@ fun ReminderScreen(
         Box(
             modifier = Modifier.padding(paddingValues)
         ) {
-            Text("Reminder Screen")
+            Text("Steps counter Screen")
         }
     }
 }
