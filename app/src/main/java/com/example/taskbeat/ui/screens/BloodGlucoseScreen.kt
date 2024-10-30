@@ -65,7 +65,7 @@ fun BloodGlucoseContent(
         verticalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.blood_glucose_monitor),
+            painter = painterResource(id = R.drawable.blood_glucose_icon),
             contentDescription = "Blood Glucose Monitor Icon",
             modifier = Modifier.size(200.dp)
         )
