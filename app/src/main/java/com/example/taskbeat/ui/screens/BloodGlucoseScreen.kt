@@ -1,15 +1,24 @@
 package com.example.taskbeat.ui.screens
 
 import TopBar
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModel
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.taskbeat.R
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.example.taskbeat.ui.viewmodels.BloodGlucoseViewModel
 
@@ -18,19 +27,83 @@ fun BloodGlucoseScreen(
     navCtrl: NavController,
     bloodGlucoseVM: BloodGlucoseViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    var glucoseLevel by remember { mutableStateOf("") }
+
     Scaffold(
         topBar = {
             TopBar(
-                title = "",
+                title = "Blood Glucose Tracker",
                 canNavigateBack = true,
                 onNavigateUp = { navCtrl.navigateUp() }
             )
         }
     ) { paddingValues ->
         Box(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .background(Color(0xFFE3F2FD)),
+            contentAlignment = Alignment.Center
         ) {
-            Text("Blood glucose Screen")
+            BloodGlucoseContent(
+                glucoseLevel = glucoseLevel,
+                onGlucoseChange = { glucoseLevel = it },
+                onSaveGlucose = { /* Handle save logic here */ }
+            )
         }
+    }
+}
+
+@Composable
+fun BloodGlucoseContent(
+    glucoseLevel: String,
+    onGlucoseChange: (String) -> Unit,
+    onSaveGlucose: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.blood_glucose_icon),
+            contentDescription = "Blood Glucose Monitor Icon",
+            modifier = Modifier.size(200.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Blood Glucose Input Field
+        TextField(
+            value = glucoseLevel,
+            onValueChange = onGlucoseChange,
+            label = { Text("Glucose Level (mg/dL)") },
+            modifier = Modifier.fillMaxWidth(0.8f)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Save Button
+        Button(
+            onClick = {
+                onSaveGlucose() // Implement saving logic here
+                onGlucoseChange("") // Reset input after saving
+            },
+            modifier = Modifier.size(width = 200.dp, height = 56.dp),
+            shape = CircleShape,
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E88E5))
+        ) {
+            Text("Save Glucose Level", color = Color.White)
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Display last recorded glucose level (could be fetched from the ViewModel)
+        // Replace with actual logic for displaying last saved glucose level
+        Text(
+            text = "Last Recorded: -- mg/dL",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF1E88E5)
+        )
     }
 }
