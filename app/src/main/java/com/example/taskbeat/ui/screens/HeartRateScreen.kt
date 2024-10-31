@@ -33,7 +33,7 @@ fun HeartRateScreen(
             TopBar(
                 title = "Heart Rate",
                 canNavigateBack = true,
-                onNavigateUp = { navCtrl.navigateUp() }
+                onNavigateUp = { navCtrl.navigateUp() },
             )
         }
     ) { paddingValues ->
@@ -46,7 +46,6 @@ fun HeartRateScreen(
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
             ) {
                 // Placeholder for the heart image representation
                 Image(
@@ -56,19 +55,19 @@ fun HeartRateScreen(
                     contentScale = ContentScale.Fit
                 )
 
-                Spacer(modifier = Modifier.height(14.dp))
+//                Spacer(modifier = Modifier.height(14.dp))
 
                 // BPM Text (simulating heart rate measurement)
                 Box(
                     modifier = Modifier
-                        .size(150.dp)
+                        .size(140.dp)
                         .clip(CircleShape)
-                        .border(15.dp, Color(0xFF7EBD8F), CircleShape),
+                        .border(14.dp, Color(0xFF7EBD8F), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "68 BPM", // Replace with data from heartrateVM when live data is available
-                        fontSize = 30.sp,
+                        fontSize = 25.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Gray,
                     )
@@ -82,10 +81,15 @@ fun HeartRateScreen(
                     onClick = {
                         // Trigger heart rate measurement logic here
                     },
+                    modifier = Modifier
+                        .size(140.dp, 50.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EBD8F)),
-                    modifier = Modifier.padding(6.dp)
                 ) {
-                    Text(text = "Measure")
+                    Text(text = "Measure",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                 }
             }
         }
