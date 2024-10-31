@@ -27,7 +27,6 @@ fun HeartRateScreen(
     navCtrl: NavController,
     heartrateVM: HeartRateViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    // Scaffold is used to define the basic structure of the screen, such as the top bar and the main content area.
     Scaffold(
         topBar = {
             TopBar(
@@ -37,7 +36,6 @@ fun HeartRateScreen(
             )
         }
     ) { paddingValues ->
-        // Box is used to hold the entire content, applying padding from Scaffold.
         Box(
             modifier = Modifier
                 .padding(paddingValues)
@@ -47,7 +45,6 @@ fun HeartRateScreen(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                // Placeholder for the heart image representation
                 Image(
                     painter = painterResource(id = R.drawable.heart_image),
                     contentDescription = "Heart Image",
@@ -57,7 +54,6 @@ fun HeartRateScreen(
 
 //                Spacer(modifier = Modifier.height(14.dp))
 
-                // BPM Text (simulating heart rate measurement)
                 Box(
                     modifier = Modifier
                         .size(140.dp)
