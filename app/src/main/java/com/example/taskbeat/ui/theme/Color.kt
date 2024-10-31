@@ -2,14 +2,14 @@ package com.example.taskbeat.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF2E628C)
+val primaryLight = Color(0xFF7EBD8F)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFCDE5FF)
-val onPrimaryContainerLight = Color(0xFF001D32)
+val onPrimaryContainerLight = Color(0xFF7EBD8F)
 val secondaryLight = Color(0xFF51606F)
 val onSecondaryLight = Color(0xFFFFFFFF)
 val secondaryContainerLight = Color(0xFFD5E4F6)
-val onSecondaryContainerLight = Color(0xFF0E1D2A)
+val onSecondaryContainerLight = Color(0xFF7EBD8F)
 val tertiaryLight = Color(0xFF2D628B)
 val onTertiaryLight = Color(0xFFFFFFFF)
 val tertiaryContainerLight = Color(0xFFCDE5FF)

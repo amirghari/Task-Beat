@@ -48,7 +48,7 @@ fun HeartRateScreen(
                 Image(
                     painter = painterResource(id = R.drawable.heart_image),
                     contentDescription = "Heart Image",
-                    modifier = Modifier.size(400.dp),
+                    modifier = Modifier.size(300.dp),
                     contentScale = ContentScale.Fit
                 )
 
