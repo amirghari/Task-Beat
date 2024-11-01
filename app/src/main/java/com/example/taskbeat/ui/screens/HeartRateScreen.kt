@@ -48,7 +48,7 @@ fun HeartRateScreen(
                 Image(
                     painter = painterResource(id = R.drawable.heart_image),
                     contentDescription = "Heart Image",
-                    modifier = Modifier.size(300.dp),
+                    modifier = Modifier.size(250.dp),
                     contentScale = ContentScale.Fit
                 )
 
@@ -78,7 +78,7 @@ fun HeartRateScreen(
                         // Trigger heart rate measurement logic here
                     },
                     modifier = Modifier
-                        .size(140.dp, 50.dp),
+                        .size(160.dp, 50.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EBD8F)),
                 ) {
                     Text(text = "Measure",
