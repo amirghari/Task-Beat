@@ -90,13 +90,13 @@ fun WaterIntakeContent(
         Box(contentAlignment = Alignment.Center) {
             CircularProgressIndicator(
                 progress = progress,
-                modifier = Modifier.size(150.dp),
+                modifier = Modifier.size(165.dp),
                 color = MaterialTheme.colorScheme.primary,
-                strokeWidth = 8.dp
+                strokeWidth = 10.dp
             )
             Text(
                 text = "${(progress * 100).toInt()}% of Daily Goal",
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
         }

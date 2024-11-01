@@ -51,7 +51,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -78,4 +77,15 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.coil.compose)
     implementation(libs.androidx.datastore.preferences)
+
+    // CameraX dependencies (in Kotlin DSL format)
+    implementation("androidx.camera:camera-core:1.1.0")
+    implementation("androidx.camera:camera-camera2:1.1.0")
+    implementation("androidx.camera:camera-lifecycle:1.1.0")
+    implementation("androidx.camera:camera-view:1.1.0")
+    implementation("androidx.camera:camera-extensions:1.1.0")
+
+    // Coroutines for asynchronous operations
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 }
+
