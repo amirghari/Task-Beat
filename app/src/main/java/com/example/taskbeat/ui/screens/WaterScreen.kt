@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,7 +42,7 @@ fun WaterScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(Color(0xFFE3F2FD)),
+                .background(MaterialTheme.colorScheme.background),  // Use theme-aware background color
             contentAlignment = Alignment.Center
         ) {
             WaterIntakeContent(
@@ -80,9 +79,9 @@ fun WaterIntakeContent(
         // Water Intake Text
         Text(
             text = "$waterIntake mL",
-            fontSize = 18.sp,
+            fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF1E88E5)
+            color = MaterialTheme.colorScheme.primary
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -91,14 +90,14 @@ fun WaterIntakeContent(
         Box(contentAlignment = Alignment.Center) {
             CircularProgressIndicator(
                 progress = progress,
-                modifier = Modifier.size(200.dp),
-                color = Color(0xFF7EBD8F),
-                strokeWidth = 10.dp
+                modifier = Modifier.size(150.dp),
+                color = MaterialTheme.colorScheme.primary,
+                strokeWidth = 8.dp
             )
             Text(
                 text = "${(progress * 100).toInt()}% of Daily Goal",
                 fontSize = 14.sp,
-                color = Color(0xFF616161)
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
 
@@ -109,24 +108,18 @@ fun WaterIntakeContent(
             Button(
                 onClick = onRemoveWater,
                 shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF64B5F6))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("-250 mL", color = Color.White)
+                Text("-250 mL", color = MaterialTheme.colorScheme.onPrimary)
             }
 
             Button(
                 onClick = onAddWater,
                 shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E88E5))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("+250 mL", color = Color.White)
+                Text("+250 mL", color = MaterialTheme.colorScheme.onPrimary)
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun WaterScreenPreview() {
-    WaterScreen(navCtrl = rememberNavController())
 }
