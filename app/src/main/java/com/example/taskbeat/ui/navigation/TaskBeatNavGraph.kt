@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.example.taskbeat.ui.screens.BloodGlucoseScreen
 import com.example.taskbeat.ui.screens.BloodPressureScreen
 import com.example.taskbeat.ui.screens.BodyCompositionScreen
+import com.example.taskbeat.ui.screens.ChatScreen
 import com.example.taskbeat.ui.screens.EnumScreens
 import com.example.taskbeat.ui.screens.HomeScreen
 import com.example.taskbeat.ui.screens.SettingsScreen
@@ -47,6 +48,9 @@ fun TaskBeatNavHost(
         }
         composable(route = EnumScreens.BLOOD_GLUCOSE.route) {
             BloodGlucoseScreen(navCtrl)
+        }
+        composable(route = EnumScreens.CHAT.route) {
+            ChatScreen(navCtrl)
         }
     }
 }

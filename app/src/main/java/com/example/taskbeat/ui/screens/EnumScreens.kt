@@ -9,7 +9,8 @@ enum class EnumScreens(val route: String) {
     BODY_COMPOSITION("body_composition"),
     WATER("water"),
     BLOOD_PRESSURE("blood_pressure"),
-    BLOOD_GLUCOSE("blood_glucose");
+    BLOOD_GLUCOSE("blood_glucose"),
+    CHAT("chat");
 
     fun withParams(vararg args: String): String {
         var updatedRoute = route

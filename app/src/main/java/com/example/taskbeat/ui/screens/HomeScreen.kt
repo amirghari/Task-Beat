@@ -50,6 +50,7 @@ fun HomeScreen(
     homeVM: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val screens = listOf(
+        EnumScreens.CHAT,
         EnumScreens.STEPS_COUNTER,
         EnumScreens.WORKOUT_TIME,
         EnumScreens.HEART_RATE,
