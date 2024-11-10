@@ -1,10 +1,14 @@
 package com.example.taskbeat.ui.viewmodels
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.taskbeat.TaskBeatApplication
+import com.example.taskbeat.data.Gemma22BModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 fun CreationExtras.pmApplication(): TaskBeatApplication =
     (this[APPLICATION_KEY] as TaskBeatApplication)
@@ -73,7 +77,8 @@ object AppViewModelProvider {
 
         initializer {
             ChatViewModel(
-                pmApplication().container.dataRepo
+                pmApplication().container.dataRepo,
+                pmApplication().container.model
             )
         }
     }

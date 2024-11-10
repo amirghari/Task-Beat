@@ -1,6 +1,7 @@
 package com.example.taskbeat.ui.screens
 
 import TopBar
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -36,13 +38,17 @@ import androidx.navigation.NavController
 import com.example.taskbeat.data.DataRepository
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
+import com.example.taskbeat.data.Gemma22BModel
 import com.example.taskbeat.ui.viewmodels.HomeViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun HomeScreen(
@@ -60,6 +66,16 @@ fun HomeScreen(
         EnumScreens.BLOOD_GLUCOSE,
         EnumScreens.SETTINGS,
     )
+
+//    LaunchedEffect(Unit, block = {
+//        withContext(Dispatchers.IO) {
+//            try {
+//                Gemma22BModel.getInstance(context)
+//            } catch (e: Exception) {
+//                Log.e("DBG", e.toString())
+//            }
+//        }
+//    })
 
     Scaffold(
         topBar = {

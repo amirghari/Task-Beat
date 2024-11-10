@@ -1,5 +1,6 @@
 package com.example.taskbeat.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -25,14 +27,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.taskbeat.data.Gemma22BModel
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.example.taskbeat.ui.viewmodels.ChatViewModel
+import com.google.mediapipe.tasks.genai.llminference.LlmInference
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun ChatScreen(
@@ -78,8 +85,8 @@ fun ChatScreen(
                         inputText = TextFieldValue("")
 
                         coroutineScope.launch {
-                            val botResponse = getBotResponse(userMessage)
-                            messages.add(botResponse to false)
+//                            val botResponse = chatVM.getBotResponse(userMessage)
+//                            messages.add(botResponse to false)
                         }
                     }
                 }
@@ -113,10 +120,4 @@ fun MessageBubble(text: String, isUserMessage: Boolean) {
             )
         }
     }
-}
-
-suspend fun getBotResponse(input: String): String {
-    // Simulate a response from a local model
-    // In a real app, this might be an API call to a small LLM or use an offline model
-    return "This is a response to: \"$input\""
 }
