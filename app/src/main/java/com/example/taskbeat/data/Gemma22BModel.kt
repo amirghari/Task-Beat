@@ -1,11 +1,7 @@
 package com.example.taskbeat.data
 
 import android.content.Context
-import android.util.Log
 import com.google.mediapipe.tasks.genai.llminference.LlmInference
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -53,10 +49,8 @@ class Gemma22BModel(
 
         fun getInstance(context: Context): Gemma22BModel {
             return if (instance != null) {
-                Log.d("DBG", "Model has already been init")
                 instance!!
             } else {
-                Log.d("DBG", "Model is init first time")
                 Gemma22BModel(context).also { instance = it }
             }
         }

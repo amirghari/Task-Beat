@@ -1,123 +1,194 @@
 package com.example.taskbeat.ui.screens
 
-import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.taskbeat.data.Gemma22BModel
+import com.example.taskbeat.R
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
+import com.example.taskbeat.ui.viewmodels.ChatMessage
 import com.example.taskbeat.ui.viewmodels.ChatViewModel
-import com.google.mediapipe.tasks.genai.llminference.LlmInference
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.taskbeat.ui.viewmodels.UiState
 
 @Composable
 fun ChatScreen(
     navCtrl: NavController,
     chatVM: ChatViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    var inputText by remember { mutableStateOf(TextFieldValue("")) }
-    val messages = remember { mutableStateListOf<Pair<String, Boolean>>() }
-    val coroutineScope = rememberCoroutineScope()
+    val uiState by chatVM.uiState.collectAsStateWithLifecycle()
+    val textInputEnabled by chatVM.isTextInputEnabled.collectAsStateWithLifecycle()
+    ChatInnerScreen(
+        uiState,
+        textInputEnabled
+    ) { message ->
+        chatVM.sendMessage(message)
+    }
+}
+
+@Composable
+fun ChatInnerScreen(
+    uiState: UiState,
+    textInputEnabled: Boolean = true,
+    onSendMessage: (String) -> Unit
+) {
+    var userMessage by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom
     ) {
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
             reverseLayout = true
         ) {
-            items(messages.reversed()) { message ->
-                MessageBubble(message.first, message.second)
-                Spacer(modifier = Modifier.height(8.dp))
+            items(uiState.messages) { chat ->
+                ChatItem(chat)
             }
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp, horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TextField(
-                value = inputText,
-                onValueChange = { inputText = it },
-                placeholder = { Text("Enter your message") },
-                modifier = Modifier.weight(1f)
-            )
-            Button(
-                onClick = {
-                    val userMessage = inputText.text
-                    if (userMessage.isNotBlank()) {
-                        messages.add(userMessage to true)
-                        inputText = TextFieldValue("")
 
-                        coroutineScope.launch {
-//                            val botResponse = chatVM.getBotResponse(userMessage)
-//                            messages.add(botResponse to false)
-                        }
+            Column { }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            TextField(
+                value = userMessage,
+                onValueChange = { userMessage = it },
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Sentences,
+                ),
+                label = {
+                    Text(stringResource(R.string.chat_label))
+                },
+                modifier = Modifier
+                    .weight(0.85f),
+                enabled = textInputEnabled
+            )
+
+            IconButton(
+                onClick = {
+                    if (userMessage.isNotBlank()) {
+                        onSendMessage(userMessage)
+                        userMessage = ""
                     }
-                }
+                },
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .align(Alignment.CenterVertically)
+                    .fillMaxWidth()
+                    .weight(0.15f),
+                enabled = textInputEnabled
             ) {
-                Text("Send")
+                Icon(
+                    Icons.AutoMirrored.Default.Send,
+                    contentDescription = stringResource(R.string.action_send),
+                    modifier = Modifier
+                )
             }
         }
     }
 }
 
 @Composable
-fun MessageBubble(text: String, isUserMessage: Boolean) {
-    Box(
-        contentAlignment = if (isUserMessage) Alignment.CenterEnd else Alignment.CenterStart,
+fun ChatItem(
+    chatMessage: ChatMessage
+) {
+    val backgroundColor = if (chatMessage.isFromUser) {
+        MaterialTheme.colorScheme.tertiaryContainer
+    } else {
+        MaterialTheme.colorScheme.secondaryContainer
+    }
+
+    val bubbleShape = if (chatMessage.isFromUser) {
+        RoundedCornerShape(20.dp, 4.dp, 20.dp, 20.dp)
+    } else {
+        RoundedCornerShape(4.dp, 20.dp, 20.dp, 20.dp)
+    }
+
+    val horizontalAlignment = if (chatMessage.isFromUser) {
+        Alignment.End
+    } else {
+        Alignment.Start
+    }
+
+    Column(
+        horizontalAlignment = horizontalAlignment,
         modifier = Modifier
+            .padding(horizontal = 8.dp, vertical = 4.dp)
             .fillMaxWidth()
-            .padding(horizontal = 8.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .background(
-                    color = if (isUserMessage) Color(0xFFBBDEFB) else Color(0xFFE1BEE7),
-                    shape = RoundedCornerShape(12.dp)
-                )
-                .padding(12.dp)
-        ) {
-            Text(
-                text = text,
-                fontSize = 16.sp,
-                color = if (isUserMessage) Color.Black else Color.White
-            )
+        val author = if (chatMessage.isFromUser) {
+            stringResource(R.string.user_label)
+        } else {
+            stringResource(R.string.model_label)
+        }
+        Text(
+            text = author,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+        Row {
+            BoxWithConstraints {
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = backgroundColor),
+                    shape = bubbleShape,
+                    modifier = Modifier.widthIn(0.dp, maxWidth * 0.9f)
+                ) {
+                    if (chatMessage.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    } else {
+                        Text(
+                            text = chatMessage.message,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+            }
         }
     }
 }
