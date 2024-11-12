@@ -28,6 +28,9 @@ fun BloodPressureScreen(
     var systolic by remember { mutableStateOf("") }
     var diastolic by remember { mutableStateOf("") }
 
+    // Observing last recorded blood pressure value from ViewModel
+    val lastRecorded by bloodPressureVM.lastRecorded.collectAsState()
+
     Scaffold(
         topBar = {
             TopBar(
@@ -49,7 +52,15 @@ fun BloodPressureScreen(
                 diastolic = diastolic,
                 onSystolicChange = { systolic = it },
                 onDiastolicChange = { diastolic = it },
-                onSavePressure = {  }
+                onSavePressure = {
+                    // Save systolic and diastolic values using ViewModel
+                    if (systolic.isNotBlank() && diastolic.isNotBlank()) {
+                        bloodPressureVM.saveBloodPressure(systolic, diastolic)
+                        systolic = "" // Clear the input fields after saving
+                        diastolic = ""
+                    }
+                },
+                lastRecorded = lastRecorded
             )
         }
     }
@@ -61,7 +72,8 @@ fun BloodPressureContent(
     diastolic: String,
     onSystolicChange: (String) -> Unit,
     onDiastolicChange: (String) -> Unit,
-    onSavePressure: () -> Unit
+    onSavePressure: () -> Unit,
+    lastRecorded: Pair<String, String>?
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -97,9 +109,7 @@ fun BloodPressureContent(
         // Save Button
         Button(
             onClick = {
-                onSavePressure() // Implement saving logic here
-                onSystolicChange("") // Reset input after saving
-                onDiastolicChange("")
+                onSavePressure() // Call the save logic from the parent
             },
             modifier = Modifier.size(width = 200.dp, height = 56.dp),
             shape = CircleShape,
@@ -110,8 +120,9 @@ fun BloodPressureContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        // Display Last Recorded Blood Pressure Value
         Text(
-            text = "Last Recorded: -- / -- mmHg",
+            text = "Last Recorded: ${lastRecorded?.first ?: "--"} / ${lastRecorded?.second ?: "--"} mmHg",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF1E88E5)

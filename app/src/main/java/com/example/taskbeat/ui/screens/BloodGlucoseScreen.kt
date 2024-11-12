@@ -29,6 +29,9 @@ fun BloodGlucoseScreen(
 ) {
     var glucoseLevel by remember { mutableStateOf("") }
 
+    // Observe the last recorded glucose level from the ViewModel
+    val lastRecorded by bloodGlucoseVM.lastRecorded.collectAsState()
+
     Scaffold(
         topBar = {
             TopBar(
@@ -48,7 +51,13 @@ fun BloodGlucoseScreen(
             BloodGlucoseContent(
                 glucoseLevel = glucoseLevel,
                 onGlucoseChange = { glucoseLevel = it },
-                onSaveGlucose = { /* Handle save logic here */ }
+                onSaveGlucose = {
+                    if (glucoseLevel.isNotBlank()) {
+                        bloodGlucoseVM.saveGlucoseLevel(glucoseLevel)
+                        glucoseLevel = "" // Clear input after saving
+                    }
+                },
+                lastRecorded = lastRecorded
             )
         }
     }
@@ -58,7 +67,8 @@ fun BloodGlucoseScreen(
 fun BloodGlucoseContent(
     glucoseLevel: String,
     onGlucoseChange: (String) -> Unit,
-    onSaveGlucose: () -> Unit
+    onSaveGlucose: () -> Unit,
+    lastRecorded: String?
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -85,8 +95,7 @@ fun BloodGlucoseContent(
         // Save Button
         Button(
             onClick = {
-                onSaveGlucose() // Implement saving logic here
-                onGlucoseChange("") // Reset input after saving
+                onSaveGlucose() // Call the save logic from the parent
             },
             modifier = Modifier.size(width = 200.dp, height = 56.dp),
             shape = CircleShape,
@@ -97,13 +106,13 @@ fun BloodGlucoseContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Display last recorded glucose level (could be fetched from the ViewModel)
-        // Replace with actual logic for displaying last saved glucose level
+        // Display Last Recorded Glucose Level
         Text(
-            text = "Last Recorded: -- mg/dL",
+            text = "Last Recorded: ${lastRecorded ?: "--"} mg/dL",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF1E88E5)
         )
     }
 }
+
