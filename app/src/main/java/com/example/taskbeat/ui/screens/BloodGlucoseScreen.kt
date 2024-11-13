@@ -45,7 +45,7 @@ fun BloodGlucoseScreen(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(Color(0xFFE3F2FD)),
+                .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
             BloodGlucoseContent(
@@ -99,9 +99,10 @@ fun BloodGlucoseContent(
             },
             modifier = Modifier.size(width = 200.dp, height = 56.dp),
             shape = CircleShape,
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E88E5))
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EBD8F))
         ) {
-            Text("Save Glucose Level", color = Color.White)
+            Text("Save Glucose Level", color = Color.White, fontWeight = FontWeight.Bold)
+
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -111,7 +112,7 @@ fun BloodGlucoseContent(
             text = "Last Recorded: ${lastRecorded ?: "--"} mg/dL",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF1E88E5)
+            color = Color(0xFF7EBD8F)
         )
     }
 }
