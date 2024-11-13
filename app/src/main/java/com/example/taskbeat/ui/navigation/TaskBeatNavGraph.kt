@@ -1,6 +1,7 @@
 package com.example.taskbeat.ui.navigation
 
 import HeartRateScreen
+import SignInScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,6 +24,9 @@ fun TaskBeatNavHost(
     NavHost(navController = navCtrl, startDestination = EnumScreens.HOME.name) {
         composable(route = EnumScreens.HOME.route) {
             HomeScreen(navCtrl)
+        }
+        composable(route = EnumScreens.SIGN_IN.route) {
+            SignInScreen(navCtrl)
         }
         composable(route = EnumScreens.SETTINGS.route) {
             SettingsScreen(navCtrl)

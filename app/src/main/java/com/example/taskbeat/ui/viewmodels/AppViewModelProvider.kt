@@ -70,5 +70,10 @@ object AppViewModelProvider {
                 pmApplication().container.dataRepo
             )
         }
+        initializer {
+            SignInViewModel(
+                pmApplication().container.dataRepo
+            )
+        }
     }
 }
