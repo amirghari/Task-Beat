@@ -34,7 +34,7 @@ fun SignInScreen(
                 modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Sign In Screen")
+                Text("Sign In ")
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = {
                     // Navigate back to home after sign-in
