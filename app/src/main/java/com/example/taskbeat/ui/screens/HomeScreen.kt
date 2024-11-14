@@ -73,7 +73,11 @@ fun HomeScreen(
                     val photoUrl = currentUser.photoUrl
                     if (photoUrl != null) {
                         // Show profile picture
-                        AsyncImage(
+                        Button(
+                            onClick = {
+                                navCtrl.navigate(EnumScreens.SIGN_IN.route)
+                            }
+                        ){AsyncImage(
                             model = photoUrl,
                             contentDescription = "User Profile Picture",
                             modifier = Modifier
@@ -81,7 +85,7 @@ fun HomeScreen(
                                 .clip(CircleShape)
                                 .background(Color.Gray),
                             contentScale = ContentScale.Crop
-                        )
+                        )}
                     } else {
                         // Show email if profile picture is not available
                         Button(
