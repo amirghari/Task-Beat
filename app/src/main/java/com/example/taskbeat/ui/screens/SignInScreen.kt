@@ -2,15 +2,25 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.example.taskbeat.R
 import com.example.taskbeat.ui.screens.EnumScreens
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -84,7 +94,8 @@ fun SignInScreen(
                             value = password,
                             onValueChange = { password = it },
                             label = { Text("Password") },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            visualTransformation = PasswordVisualTransformation() // Hides the input characters
                         )
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -120,8 +131,34 @@ fun SignInScreen(
                         }
                     } else {
                         // Display User Info and Sign Out Button
-                        Text(text = "Welcome, ${currentUser!!.displayName ?: "User"}")
-                        Spacer(modifier = Modifier.height(16.dp))
+                        if (currentUser!!.photoUrl != null) {
+                            val photoUrl = currentUser!!.photoUrl
+                            AsyncImage(
+                                model = photoUrl,
+                                contentDescription = "User Profile Picture",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Gray),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                        else {
+                            Image(
+                                painter = painterResource(id = R.drawable.user),
+                                contentDescription = "User Profile Picture",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Gray),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(26.dp))
+
+                        Text(text = "Welcome, ${currentUser!!.displayName ?: currentUser!!.email}")
+                        Spacer(modifier = Modifier.height(26.dp))
 
                         Button(onClick = {
                             signInVM.signOut()
@@ -129,6 +166,8 @@ fun SignInScreen(
                         }) {
                             Text("Sign Out")
                         }
+                        Spacer(modifier = Modifier.height(106.dp))
+
                     }
                 }
             }
