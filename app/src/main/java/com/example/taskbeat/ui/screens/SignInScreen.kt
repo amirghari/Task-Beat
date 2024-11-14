@@ -13,14 +13,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.taskbeat.ui.screens.EnumScreens
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
-import com.example.taskbeat.ui.viewmodels.SignInViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.example.taskbeat.R
+
 
 @Composable
 fun SignInScreen(
@@ -28,12 +23,11 @@ fun SignInScreen(
     signInVM: SignInViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val context = LocalContext.current
-    val auth = FirebaseAuth.getInstance()
-    val currentUser = auth.currentUser
+    val currentUser by signInVM.currentUser.collectAsState()
+    val isLoading by signInVM.isLoading.collectAsState()
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
 
     // Launcher to start Google sign-in process
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -41,19 +35,15 @@ fun SignInScreen(
         try {
             val account = task.getResult(ApiException::class.java)
             account?.let {
-                firebaseAuthWithGoogle(it, auth) { success ->
-                    isLoading = false
+                signInVM.signInWithGoogle(it, context) { success ->
                     if (success) {
                         navigateToHome(navCtrl)
-                    } else {
-                        Toast.makeText(context, "Google Sign-In failed", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         } catch (e: ApiException) {
             Log.w("SignInScreen", "Google sign in failed", e)
             Toast.makeText(context, "Google Sign-In failed: ${e.message}", Toast.LENGTH_SHORT).show()
-            isLoading = false
         }
     }
 
@@ -100,9 +90,8 @@ fun SignInScreen(
 
                         // Sign In Button for Email/Password
                         Button(onClick = {
-                            isLoading = true
-                            emailSignIn(email, password, auth, navCtrl) {
-                                isLoading = false
+                            signInVM.signInWithEmail(email, password, context) { success ->
+                                if (success) navigateToHome(navCtrl)
                             }
                         }) {
                             Text("Sign In with Email")
@@ -112,9 +101,8 @@ fun SignInScreen(
 
                         // Register Button for New Users
                         Button(onClick = {
-                            isLoading = true
-                            emailRegister(email, password, auth, navCtrl) {
-                                isLoading = false
+                            signInVM.registerWithEmail(email, password, context) { success ->
+                                if (success) navigateToHome(navCtrl)
                             }
                         }) {
                             Text("Register with Email")
@@ -124,14 +112,7 @@ fun SignInScreen(
 
                         // Sign In Button for Google
                         Button(onClick = {
-                            isLoading = true
-                            val googleSignInClient = GoogleSignIn.getClient(
-                                context,
-                                GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                    .requestIdToken(context.getString(R.string.default_web_client_id))
-                                    .requestEmail()
-                                    .build()
-                            )
+                            val googleSignInClient = GoogleSignIn.getClient(context, signInVM.getGoogleSignInOptions(context))
                             val signInIntent = googleSignInClient.signInIntent
                             launcher.launch(signInIntent)
                         }) {
@@ -139,11 +120,11 @@ fun SignInScreen(
                         }
                     } else {
                         // Display User Info and Sign Out Button
-                        Text(text = "Welcome, ${currentUser.displayName ?: "User"}")
+                        Text(text = "Welcome, ${currentUser!!.displayName ?: "User"}")
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Button(onClick = {
-                            auth.signOut()
+                            signInVM.signOut()
                             Toast.makeText(context, "Signed Out Successfully", Toast.LENGTH_SHORT).show()
                         }) {
                             Text("Sign Out")
@@ -152,60 +133,6 @@ fun SignInScreen(
                 }
             }
         }
-    }
-}
-
-private fun firebaseAuthWithGoogle(account: GoogleSignInAccount, auth: FirebaseAuth, onResult: (Boolean) -> Unit) {
-    val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-    auth.signInWithCredential(credential)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d("SignInScreen", "signInWithCredential:success")
-                onResult(true)
-            } else {
-                Log.w("SignInScreen", "signInWithCredential:failure", task.exception)
-                onResult(false)
-            }
-        }
-}
-
-private fun emailSignIn(email: String, password: String, auth: FirebaseAuth, navCtrl: NavController, onComplete: () -> Unit) {
-    if (email.isNotEmpty() && password.isNotEmpty()) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("SignInScreen", "signInWithEmail:success")
-                    navigateToHome(navCtrl)
-                } else {
-                    Log.w("SignInScreen", "signInWithEmail:failure", task.exception)
-                    Toast.makeText(navCtrl.context, "Sign In Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                }
-                onComplete()
-            }
-    } else {
-        Log.w("SignInScreen", "Email and password must not be empty")
-        Toast.makeText(navCtrl.context, "Email and password must not be empty", Toast.LENGTH_SHORT).show()
-        onComplete()
-    }
-}
-
-private fun emailRegister(email: String, password: String, auth: FirebaseAuth, navCtrl: NavController, onComplete: () -> Unit) {
-    if (email.isNotEmpty() && password.isNotEmpty()) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("SignInScreen", "createUserWithEmail:success")
-                    navigateToHome(navCtrl)
-                } else {
-                    Log.w("SignInScreen", "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(navCtrl.context, "Registration Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                }
-                onComplete()
-            }
-    } else {
-        Log.w("SignInScreen", "Email and password must not be empty")
-        Toast.makeText(navCtrl.context, "Email and password must not be empty", Toast.LENGTH_SHORT).show()
-        onComplete()
     }
 }
 
