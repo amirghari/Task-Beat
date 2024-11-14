@@ -97,14 +97,21 @@ fun SignInScreen(
                             modifier = Modifier.fillMaxWidth(),
                             visualTransformation = PasswordVisualTransformation() // Hides the input characters
                         )
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(36.dp))
 
                         // Sign In Button for Email/Password
+                        GoogleSignInButton(onClick = {
+                            val googleSignInClient = GoogleSignIn.getClient(context, signInVM.getGoogleSignInOptions(context))
+                            val signInIntent = googleSignInClient.signInIntent
+                            launcher.launch(signInIntent)
+                        })
+                        Spacer(modifier = Modifier.height(16.dp))
                         Button(onClick = {
                             signInVM.signInWithEmail(email, password, context) { success ->
                                 if (success) navigateToHome(navCtrl)
                             }
-                        }) {
+                        }, modifier = Modifier.width(200.dp))
+                        {
                             Text("Sign In with Email")
                         }
 
@@ -115,20 +122,14 @@ fun SignInScreen(
                             signInVM.registerWithEmail(email, password, context) { success ->
                                 if (success) navigateToHome(navCtrl)
                             }
-                        }) {
+                        }, modifier = Modifier.width(200.dp)) {
                             Text("Register with Email")
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
 
                         // Sign In Button for Google
-                        Button(onClick = {
-                            val googleSignInClient = GoogleSignIn.getClient(context, signInVM.getGoogleSignInOptions(context))
-                            val signInIntent = googleSignInClient.signInIntent
-                            launcher.launch(signInIntent)
-                        }) {
-                            Text("Sign In/Register with Google")
-                        }
+
                     } else {
                         // Display User Info and Sign Out Button
                         if (currentUser!!.photoUrl != null) {
@@ -178,5 +179,19 @@ fun SignInScreen(
 private fun navigateToHome(navCtrl: NavController) {
     navCtrl.navigate(EnumScreens.HOME.route) {
         popUpTo(EnumScreens.HOME.route) { inclusive = true }
+    }
+}
+@Composable
+fun GoogleSignInButton(onClick: () -> Unit) {
+    Button(onClick = onClick) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(text = "Sign In with Google")
+            Spacer(modifier = Modifier.width(8.dp))
+            Image(
+                painter = painterResource(id = R.drawable.google_icon),
+                contentDescription = "Google Icon",
+                modifier = Modifier.size(24.dp)
+            )
+        }
     }
 }
