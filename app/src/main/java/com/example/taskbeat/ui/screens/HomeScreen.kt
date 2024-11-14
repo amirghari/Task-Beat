@@ -1,4 +1,3 @@
-package com.example.taskbeat.ui.screens
 
 import TopBar
 import androidx.compose.foundation.background
@@ -33,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.taskbeat.ui.screens.EnumScreens
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.example.taskbeat.ui.viewmodels.HomeViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -77,31 +77,33 @@ fun HomeScreen(
                             onClick = {
                                 navCtrl.navigate(EnumScreens.SIGN_IN.route)
                             }
-                        ){AsyncImage(
-                            model = photoUrl,
-                            contentDescription = "User Profile Picture",
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(Color.Gray),
-                            contentScale = ContentScale.Crop
-                        )}
+                        )
+                            {
+                            AsyncImage(
+                                model = photoUrl,
+                                contentDescription = "User Profile Picture",
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Gray),
+                                contentScale = ContentScale.Crop
+                                )
+                            }
                     } else {
                         // Show email if profile picture is not available
                         Button(
                             onClick = {
                                 navCtrl.navigate(EnumScreens.SIGN_IN.route)
                             }
-                        ){
+                        )
+                        {
                             Text(
-                                text = currentUser.email ?: "User",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
+                            text = currentUser.email ?: "User",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
                         }
-
-
                     }
                 } else {
                     // If the user is not logged in, show "Sign In" button

@@ -1,6 +1,7 @@
 package com.example.taskbeat.ui.navigation
 
 import HeartRateScreen
+import HomeScreen
 import SignInScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -10,7 +11,6 @@ import com.example.taskbeat.ui.screens.BloodGlucoseScreen
 import com.example.taskbeat.ui.screens.BloodPressureScreen
 import com.example.taskbeat.ui.screens.BodyCompositionScreen
 import com.example.taskbeat.ui.screens.EnumScreens
-import com.example.taskbeat.ui.screens.HomeScreen
 import com.example.taskbeat.ui.screens.SettingsScreen
 import com.example.taskbeat.ui.screens.StepsCounterScreen
 import com.example.taskbeat.ui.screens.WaterScreen
