@@ -97,14 +97,20 @@ fun SignInScreen(
                             modifier = Modifier.fillMaxWidth(),
                             visualTransformation = PasswordVisualTransformation() // Hides the input characters
                         )
-                        Spacer(modifier = Modifier.height(36.dp))
+                        Spacer(modifier = Modifier.height(56.dp))
+
+
 
                         // Sign In Button for Email/Password
-                        GoogleSignInButton(onClick = {
-                            val googleSignInClient = GoogleSignIn.getClient(context, signInVM.getGoogleSignInOptions(context))
-                            val signInIntent = googleSignInClient.signInIntent
-                            launcher.launch(signInIntent)
-                        })
+
+                        Button(onClick = {
+                            signInVM.registerWithEmail(email, password, context) { success ->
+                                if (success) navigateToHome(navCtrl)
+                            }
+                        }, modifier = Modifier.width(245.dp)) {
+                            Text("Register with Email")
+                        }
+
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(onClick = {
                             signInVM.signInWithEmail(email, password, context) { success ->
@@ -115,18 +121,15 @@ fun SignInScreen(
                             Text("Sign In with Email")
                         }
 
-                        Spacer(modifier = Modifier.height(16.dp))
-
                         // Register Button for New Users
-                        Button(onClick = {
-                            signInVM.registerWithEmail(email, password, context) { success ->
-                                if (success) navigateToHome(navCtrl)
-                            }
-                        }, modifier = Modifier.width(245.dp)) {
-                            Text("Register with Email")
-                        }
+
 
                         Spacer(modifier = Modifier.height(16.dp))
+                        GoogleSignInButton(onClick = {
+                            val googleSignInClient = GoogleSignIn.getClient(context, signInVM.getGoogleSignInOptions(context))
+                            val signInIntent = googleSignInClient.signInIntent
+                            launcher.launch(signInIntent)
+                        })
 
                         // Sign In Button for Google
 
