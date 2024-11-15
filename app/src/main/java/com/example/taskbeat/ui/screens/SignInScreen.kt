@@ -110,7 +110,7 @@ fun SignInScreen(
                             signInVM.signInWithEmail(email, password, context) { success ->
                                 if (success) navigateToHome(navCtrl)
                             }
-                        }, modifier = Modifier.width(200.dp))
+                        }, modifier = Modifier.width(245.dp))
                         {
                             Text("Sign In with Email")
                         }
@@ -122,7 +122,7 @@ fun SignInScreen(
                             signInVM.registerWithEmail(email, password, context) { success ->
                                 if (success) navigateToHome(navCtrl)
                             }
-                        }, modifier = Modifier.width(200.dp)) {
+                        }, modifier = Modifier.width(245.dp)) {
                             Text("Register with Email")
                         }
 
