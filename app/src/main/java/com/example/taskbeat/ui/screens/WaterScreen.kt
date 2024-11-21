@@ -11,19 +11,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.taskbeat.R
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.example.taskbeat.ui.viewmodels.WaterViewModel
 
 @Composable
 fun WaterScreen(
-    navCtrl: NavController,
+    navCtrl: WaterViewModel,
     waterVM: WaterViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val dailyGoal = 2000 // in mL

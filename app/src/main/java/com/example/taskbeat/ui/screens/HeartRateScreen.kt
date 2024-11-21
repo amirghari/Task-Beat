@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -31,16 +30,16 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.taskbeat.R
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.example.taskbeat.ui.viewmodels.HeartRateViewModel
 import java.util.concurrent.Executors
 import androidx.compose.ui.layout.ContentScale.Companion as ContentScale1
 
+
 @Composable
 fun HeartRateScreen(
-    navCtrl: NavController,
+    navCtrl: HeartRateViewModel,
     heartrateVM: HeartRateViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val heartRate by heartrateVM.heartRate.observeAsState()

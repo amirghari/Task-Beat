@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
     tableName = "parliament_member",
     indices = [Index(value = ["heteka_id"], unique = true)]
 )
+
 data class ParliamentMember(
     @PrimaryKey
     @ColumnInfo(name = "heteka_id")     val hetekaId: Int,

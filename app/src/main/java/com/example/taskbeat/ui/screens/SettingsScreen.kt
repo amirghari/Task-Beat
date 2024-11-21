@@ -8,15 +8,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import com.example.taskbeat.SettingViewModel
+import com.example.taskbeat.data.DataRepository
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
-import com.example.taskbeat.ui.viewmodels.HomeViewModel
-import com.example.taskbeat.ui.viewmodels.SettingsViewModel
 
 @Composable
 fun SettingsScreen(
-    navCtrl: NavController,
-    settingsVM: SettingsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    navCtrl: DataRepository,
+    settingsVM: SettingViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     Scaffold(
         topBar = {

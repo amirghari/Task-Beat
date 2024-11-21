@@ -14,13 +14,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.example.taskbeat.ui.viewmodels.BodyCompositionViewModel
 
 @Composable
 fun BodyCompositionScreen(
-    navCtrl: NavController,
+    navCtrl: BodyCompositionViewModel,
     bodyCompositionVM: BodyCompositionViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     var weight by remember { mutableStateOf(56f) }

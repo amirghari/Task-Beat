@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.taskbeat.R
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.example.taskbeat.ui.viewmodels.BloodPressureViewModel
@@ -24,7 +23,7 @@ import com.example.taskbeat.ui.viewmodels.BloodPressureViewModel
 fun BloodPressureScreen(
     navCtrl: NavController,
     bloodPressureVM: BloodPressureViewModel = viewModel(factory = AppViewModelProvider.Factory)
-) {
+){
     var systolic by remember { mutableStateOf("") }
     var diastolic by remember { mutableStateOf("") }
 
