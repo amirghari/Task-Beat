@@ -10,6 +10,7 @@ enum class EnumScreens(val route: String) {
     WATER("water"),
     BLOOD_PRESSURE("blood_pressure"),
     BLOOD_GLUCOSE("blood_glucose"),
+    LOADING_CHAT("loading_chat"),
     CHAT("chat");
 
     fun withParams(vararg args: String): String {

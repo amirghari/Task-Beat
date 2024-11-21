@@ -1,4 +1,4 @@
-package com.example.taskbeat.ui.screens
+package com.example.taskbeat.ui.screens.chatscreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints

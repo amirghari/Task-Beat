@@ -8,14 +8,14 @@ import androidx.navigation.compose.composable
 import com.example.taskbeat.ui.screens.BloodGlucoseScreen
 import com.example.taskbeat.ui.screens.BloodPressureScreen
 import com.example.taskbeat.ui.screens.BodyCompositionScreen
-import com.example.taskbeat.ui.screens.ChatScreen
+import com.example.taskbeat.ui.screens.chatscreen.ChatScreen
+import com.example.taskbeat.ui.screens.chatscreen.LoadingChatScreen
 import com.example.taskbeat.ui.screens.EnumScreens
 import com.example.taskbeat.ui.screens.HomeScreen
 import com.example.taskbeat.ui.screens.SettingsScreen
 import com.example.taskbeat.ui.screens.StepsCounterScreen
 import com.example.taskbeat.ui.screens.WaterScreen
 import com.example.taskbeat.ui.screens.WorkoutTimeScreen
-
 
 @Composable
 fun TaskBeatNavHost(
@@ -48,6 +48,16 @@ fun TaskBeatNavHost(
         }
         composable(route = EnumScreens.BLOOD_GLUCOSE.route) {
             BloodGlucoseScreen(navCtrl)
+        }
+        composable(route = EnumScreens.LOADING_CHAT.route) {
+            LoadingChatScreen(
+                onModelLoaded = {
+                    navCtrl.navigate(EnumScreens.CHAT.route) {
+                        popUpTo(EnumScreens.LOADING_CHAT.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
         composable(route = EnumScreens.CHAT.route) {
             ChatScreen(navCtrl)
