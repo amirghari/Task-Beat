@@ -29,7 +29,7 @@ class Gemma22BModel(
 
         val options = LlmInference.LlmInferenceOptions.builder()
             .setModelPath(MODEL_PATH)
-            .setMaxTokens(512)
+            .setMaxTokens(768)
             .setResultListener { partialResult, done ->
                 _partialResults.tryEmit(partialResult to done)
             }
@@ -38,9 +38,16 @@ class Gemma22BModel(
         llmInference = LlmInference.createFromOptions(context, options)
     }
 
+    private val systemEnforcement = "<start_of_turn>system\nYou are an AI called HealthBot resides within a mobile application called TaskBeat that provide health related tips and instructions<end_of_turn>\n"
+    private val userEnforcement = ". Answer with moderate length. If the requests are unrelated to health, politely redirect the conversation to health topics. Always respond in a professional and health-focused manner."
+
     fun generateResponseAsync(prompt: String) {
-        val gemmaPrompt = "$prompt<start_of_turn>model\n"
-        llmInference.generateResponseAsync(gemmaPrompt)
+        val insertionPoint = prompt.indexOf("<end_of_turn>")
+        val modifiedUserPrompt = StringBuilder(prompt)
+            .insert(insertionPoint, userEnforcement)
+            .toString()
+        val modifiedMessage = "$systemEnforcement$modifiedUserPrompt\n<start_of_turn>model\n"
+        llmInference.generateResponseAsync(modifiedMessage)
     }
 
     companion object {
