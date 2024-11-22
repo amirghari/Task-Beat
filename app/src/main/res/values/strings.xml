@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TaskBeat</string>
+    <string name="default_web_client_id">288761821690-0uc9vqjr0pr3j601mqln3ku4slmoh96d.apps.googleusercontent.com</string>
 </resources>

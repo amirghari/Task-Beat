@@ -1,52 +1,73 @@
 package com.example.taskbeat.ui.navigation
 
 import HeartRateScreen
+import HomeScreen
+import SignInScreen
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.taskbeat.ui.screens.BloodGlucoseScreen
-import com.example.taskbeat.ui.screens.BloodPressureScreen
-import com.example.taskbeat.ui.screens.BodyCompositionScreen
-import com.example.taskbeat.ui.screens.EnumScreens
-import com.example.taskbeat.ui.screens.HomeScreen
-import com.example.taskbeat.ui.screens.SettingsScreen
-import com.example.taskbeat.ui.screens.StepsCounterScreen
-import com.example.taskbeat.ui.screens.WaterScreen
-import com.example.taskbeat.ui.screens.WorkoutTimeScreen
-
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.taskbeat.ui.screens.*
 
 @Composable
 fun TaskBeatNavHost(
-    navCtrl: NavHostController
+    navController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
-    NavHost(navController = navCtrl, startDestination = EnumScreens.HOME.name) {
-        composable(route = EnumScreens.HOME.route) {
-            HomeScreen(navCtrl)
-        }
-        composable(route = EnumScreens.SETTINGS.route) {
-            SettingsScreen(navCtrl)
-        }
-        composable(route = EnumScreens.STEPS_COUNTER.route) {
-            StepsCounterScreen(navCtrl)
-        }
-        composable(route = EnumScreens.WORKOUT_TIME.route) {
-            WorkoutTimeScreen(navCtrl)
-        }
-        composable(route = EnumScreens.HEART_RATE.route) {
-            HeartRateScreen(navCtrl)
-        }
-        composable(route = EnumScreens.BODY_COMPOSITION.route) {
-            BodyCompositionScreen(navCtrl)
-        }
-        composable(route = EnumScreens.WATER.route) {
-            WaterScreen(navCtrl)
-        }
-        composable(route = EnumScreens.BLOOD_PRESSURE.route) {
-            BloodPressureScreen(navCtrl)
-        }
-        composable(route = EnumScreens.BLOOD_GLUCOSE.route) {
-            BloodGlucoseScreen(navCtrl)
+    NavHost(
+        navController = navController,
+        startDestination = EnumScreens.HOME.route,
+        modifier = modifier
+    ) {
+        composable(EnumScreens.HOME.route) { HomeScreen(navController) }
+        composable(EnumScreens.SIGN_IN.route) { SignInScreen(navController) }
+        composable(EnumScreens.SETTINGS.route) { SettingsScreen(navController) }
+        composable(EnumScreens.STEPS_COUNTER.route) { StepsCounterScreen(navController) }
+        composable(EnumScreens.WORKOUT_TIME.route) { WorkoutTimeScreen(navController) }
+        composable(EnumScreens.HEART_RATE.route) { HeartRateScreen(navController) }
+        composable(EnumScreens.BODY_COMPOSITION.route) { BodyCompositionScreen(navController) }
+        composable(EnumScreens.WATER.route) { WaterScreen(navController) }
+        composable(EnumScreens.BLOOD_PRESSURE.route) { BloodPressureScreen(navController) }
+        composable(EnumScreens.BLOOD_GLUCOSE.route) { BloodGlucoseScreen(navController) }
+    }
+}
+
+@Composable
+fun BottomNavBar(navController: NavHostController) {
+    val navItems = listOf(
+        EnumScreens.HOME,
+        EnumScreens.HEART_RATE,
+        EnumScreens.WATER,
+        EnumScreens.BODY_COMPOSITION,
+        EnumScreens.BLOOD_PRESSURE
+    )
+
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
+
+    NavigationBar {
+        navItems.forEach { screen ->
+            NavigationBarItem(
+                icon = {
+                    if (screen.icon != null) {
+                        Icon(imageVector = screen.icon, contentDescription = screen.displayName)
+                    }
+                },
+                label = { Text(screen.displayName) },
+                selected = currentRoute == screen.route,
+                onClick = {
+                    if (currentRoute != screen.route) {
+                        navController.navigate(screen.route) {
+                            popUpTo(EnumScreens.HOME.route) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                }
+            )
         }
     }
 }
+

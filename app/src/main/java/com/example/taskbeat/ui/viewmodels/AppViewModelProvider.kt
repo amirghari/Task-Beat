@@ -1,5 +1,6 @@
 package com.example.taskbeat.ui.viewmodels
 
+import SignInViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
@@ -67,6 +68,11 @@ object AppViewModelProvider {
 
         initializer {
             BloodGlucoseViewModel(
+                pmApplication().container.dataRepo
+            )
+        }
+        initializer {
+            SignInViewModel(
                 pmApplication().container.dataRepo
             )
         }
