@@ -1,3 +1,5 @@
+package com.example.taskbeat.ui.screens
+
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -21,8 +23,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.taskbeat.R
-import com.example.taskbeat.ui.screens.EnumScreens
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
+import com.example.taskbeat.ui.viewmodels.SignInViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 

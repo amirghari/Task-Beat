@@ -1,3 +1,5 @@
+package com.example.taskbeat.ui.screens
+
 import android.Manifest
 import android.content.Context
 import android.util.Log

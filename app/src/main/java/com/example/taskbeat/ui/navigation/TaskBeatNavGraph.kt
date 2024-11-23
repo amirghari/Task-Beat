@@ -1,8 +1,5 @@
 package com.example.taskbeat.ui.navigation
 
-import HeartRateScreen
-import HomeScreen
-import SignInScreen
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,7 +14,6 @@ import com.example.taskbeat.ui.screens.BodyCompositionScreen
 import com.example.taskbeat.ui.screens.chatscreen.ChatScreen
 import com.example.taskbeat.ui.screens.chatscreen.LoadingChatScreen
 import com.example.taskbeat.ui.screens.EnumScreens
-import com.example.taskbeat.ui.screens.HomeScreen
 import com.example.taskbeat.ui.screens.SettingsScreen
 import com.example.taskbeat.ui.screens.StepsCounterScreen
 import com.example.taskbeat.ui.screens.WaterScreen
@@ -47,7 +43,7 @@ fun TaskBeatNavHost(
         composable(route = EnumScreens.LOADING_CHAT.route) {
             LoadingChatScreen(
                 onModelLoaded = {
-                    navCtrl.navigate(EnumScreens.CHAT.route) {
+                    navController.navigate(EnumScreens.CHAT.route) {
                         popUpTo(EnumScreens.LOADING_CHAT.route) { inclusive = true }
                         launchSingleTop = true
                     }
@@ -55,7 +51,7 @@ fun TaskBeatNavHost(
             )
         }
         composable(route = EnumScreens.CHAT.route) {
-            ChatScreen(navCtrl)
+            ChatScreen(navController)
         }
     }
 }
@@ -65,7 +61,7 @@ fun BottomNavBar(navController: NavHostController) {
     val navItems = listOf(
         EnumScreens.HOME,
         EnumScreens.HEART_RATE,
-        EnumScreens.WATER,
+        EnumScreens.LOADING_CHAT,
         EnumScreens.BODY_COMPOSITION,
         EnumScreens.BLOOD_PRESSURE
     )
