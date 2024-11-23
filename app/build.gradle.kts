@@ -100,5 +100,7 @@ dependencies {
 
     // Coroutines for asynchronous operations
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+
+    implementation (libs.tasks.genai)
 }
 

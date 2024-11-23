@@ -76,5 +76,12 @@ object AppViewModelProvider {
                 pmApplication().container.dataRepo
             )
         }
+
+        initializer {
+            ChatViewModel(
+                pmApplication().container.dataRepo,
+                pmApplication().container.model
+            )
+        }
     }
 }
