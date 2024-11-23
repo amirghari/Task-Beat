@@ -29,7 +29,7 @@ fun BloodPressureScreen(
     var diastolic by remember { mutableStateOf("") }
 
     // Observing last recorded blood pressure value from ViewModel
-    val lastRecorded by bloodPressureVM.lastRecorded.collectAsState()
+//    val lastRecorded by bloodPressureVM.lastRecorded.collectAsState()
 
     Scaffold(
         topBar = {
@@ -47,21 +47,21 @@ fun BloodPressureScreen(
                 .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
-            BloodPressureContent(
-                systolic = systolic,
-                diastolic = diastolic,
-                onSystolicChange = { systolic = it },
-                onDiastolicChange = { diastolic = it },
-                onSavePressure = {
-                    // Save systolic and diastolic values using ViewModel
-                    if (systolic.isNotBlank() && diastolic.isNotBlank()) {
-                        bloodPressureVM.saveBloodPressure(systolic, diastolic)
-                        systolic = "" // Clear the input fields after saving
-                        diastolic = ""
-                    }
-                },
-                lastRecorded = lastRecorded
-            )
+//            BloodPressureContent(
+//                systolic = systolic,
+//                diastolic = diastolic,
+//                onSystolicChange = { systolic = it },
+//                onDiastolicChange = { diastolic = it },
+//                onSavePressure = {
+//                    // Save systolic and diastolic values using ViewModel
+//                    if (systolic.isNotBlank() && diastolic.isNotBlank()) {
+//                        bloodPressureVM.saveBloodPressure(systolic, diastolic)
+//                        systolic = "" // Clear the input fields after saving
+//                        diastolic = ""
+//                    }
+//                },
+//                lastRecorded = lastRecorded
+//            )
         }
     }
 }

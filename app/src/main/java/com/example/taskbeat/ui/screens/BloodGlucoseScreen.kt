@@ -30,7 +30,7 @@ fun BloodGlucoseScreen(
     var glucoseLevel by remember { mutableStateOf("") }
 
     // Observe the last recorded glucose level from the ViewModel
-    val lastRecorded by bloodGlucoseVM.lastRecorded.collectAsState()
+//    val lastRecorded by bloodGlucoseVM.lastRecorded.collectAsState()
 
     Scaffold(
         topBar = {
@@ -48,17 +48,17 @@ fun BloodGlucoseScreen(
                 .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
-            BloodGlucoseContent(
-                glucoseLevel = glucoseLevel,
-                onGlucoseChange = { glucoseLevel = it },
-                onSaveGlucose = {
-                    if (glucoseLevel.isNotBlank()) {
-                        bloodGlucoseVM.saveGlucoseLevel(glucoseLevel)
-                        glucoseLevel = "" // Clear input after saving
-                    }
-                },
-                lastRecorded = lastRecorded
-            )
+//            BloodGlucoseContent(
+//                glucoseLevel = glucoseLevel,
+//                onGlucoseChange = { glucoseLevel = it },
+//                onSaveGlucose = {
+//                    if (glucoseLevel.isNotBlank()) {
+//                        bloodGlucoseVM.saveGlucoseLevel(glucoseLevel)
+//                        glucoseLevel = "" // Clear input after saving
+//                    }
+//                },
+//                lastRecorded = lastRecorded
+//            )
         }
     }
 }
