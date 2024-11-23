@@ -15,8 +15,8 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.taskbeat.data.AppContainer
 import com.example.taskbeat.data.AppDataContainer
-import com.example.taskbeat.workers.CustomWorkerFactory
-import com.example.taskbeat.workers.FetchAndUpdateDBWorker
+//import com.example.taskbeat.workers.CustomWorkerFactory
+//import com.example.taskbeat.workers.FetchAndUpdateDBWorker
 import java.util.concurrent.TimeUnit
 
 private const val DARK_THEME_PREFERENCE_NAME = "dark_theme_preferences"
@@ -67,6 +67,6 @@ class TaskBeatApplication: Application(), Configuration.Provider {
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
             .setMinimumLoggingLevel(Log.DEBUG)
-            .setWorkerFactory(CustomWorkerFactory(container.dataRepo))
+//            .setWorkerFactory(CustomWorkerFactory(container.dataRepo))
             .build()
 }

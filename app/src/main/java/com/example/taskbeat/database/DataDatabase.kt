@@ -4,23 +4,25 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.taskbeat.data.DataDao
-import com.example.taskbeat.model.ParliamentMember
-import com.example.taskbeat.model.ParliamentMemberExtra
-import com.example.taskbeat.model.ParliamentMemberLocal
+import com.example.taskbeat.data.HealthDao
+import com.example.taskbeat.data.UserDao
+import com.example.taskbeat.model.User
+import com.example.taskbeat.model.Health
 import kotlin.concurrent.Volatile
 
-@Database(entities = [ParliamentMember::class, ParliamentMemberExtra::class, ParliamentMemberLocal::class], version = 1, exportSchema = false)
-abstract class DataDatabase : RoomDatabase() {
-    abstract fun dataDao(): DataDao
+@Database(entities = [User::class, Health::class], version = 1, exportSchema = false)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun userDao(): UserDao
+    abstract fun healthDao(): HealthDao
 
     companion object {
         @Volatile
-        private var Instance: DataDatabase? = null
+        private var Instance: AppDatabase? = null
 
-        fun getDatabase(context: Context): DataDatabase {
+        fun getDatabase(context: Context): AppDatabase {
             return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, DataDatabase::class.java, "parliament_members_database")
+                Room.databaseBuilder(context, AppDatabase::class.java, "taskbeat_database")
+                    .fallbackToDestructiveMigration() // For handling schema changes during development
                     .build()
                     .also { Instance = it }
             }

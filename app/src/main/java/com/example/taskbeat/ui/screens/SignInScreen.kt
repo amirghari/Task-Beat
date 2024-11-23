@@ -15,8 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -26,7 +28,6 @@ import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 
-
 @Composable
 fun SignInScreen(
     navCtrl: NavController,
@@ -35,9 +36,33 @@ fun SignInScreen(
     val context = LocalContext.current
     val currentUser by signInVM.currentUser.collectAsState()
     val isLoading by signInVM.isLoading.collectAsState()
+    val userAge by signInVM.userAge.collectAsState()
+    val userGender by signInVM.userGender.collectAsState()
+    val userDisplayName by signInVM.userDisplayName.collectAsState()
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    // State to track if we need additional information
+    var showAdditionalInfoDialog by remember { mutableStateOf(false) }
+    var age by remember { mutableStateOf("") }
+    var gender by remember { mutableStateOf("") }
+    var displayName by remember { mutableStateOf("") }
+    var genderExpanded by remember { mutableStateOf(false) }
+
+    // Fetch user data when the screen loads
+    LaunchedEffect(currentUser) {
+        currentUser?.email?.let { email ->
+            signInVM.loadUserFromLocalDatabase(email) { user ->
+                if (user == null) {
+                    // Handle case when user is not found in the local database
+                    Log.d("SignInScreen", "User not found in the local database.")
+                } else {
+                    Log.d("SignInScreen", "User loaded successfully from the local database.")
+                }
+            }
+        }
+    }
 
     // Launcher to start Google sign-in process
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -45,10 +70,9 @@ fun SignInScreen(
         try {
             val account = task.getResult(ApiException::class.java)
             account?.let {
-                signInVM.signInWithGoogle(it, context) { success ->
-                    if (success) {
-                        navigateToHome(navCtrl)
-                    }
+                displayName = account.displayName ?: "User"
+                signInVM.signInWithGoogle(it, context) { needsAdditionalInfo ->
+                    showAdditionalInfoDialog = needsAdditionalInfo
                 }
             }
         } catch (e: ApiException) {
@@ -97,44 +121,45 @@ fun SignInScreen(
                             modifier = Modifier.fillMaxWidth(),
                             visualTransformation = PasswordVisualTransformation() // Hides the input characters
                         )
-                        Spacer(modifier = Modifier.height(56.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
                         // Sign In Button for Google
-
-                        Spacer(modifier = Modifier.height(16.dp))
                         GoogleSignInButton(onClick = {
                             val googleSignInClient = GoogleSignIn.getClient(context, signInVM.getGoogleSignInOptions(context))
                             val signInIntent = googleSignInClient.signInIntent
                             launcher.launch(signInIntent)
                         })
 
-                        // Sign In Button for Email/Password
-
                         Spacer(modifier = Modifier.height(16.dp))
 
+                        // Register Button for New Users
+                        // Register Button for New Users
                         Button(onClick = {
-                            signInVM.registerWithEmail(email, password, context) { success ->
-                                if (success) navigateToHome(navCtrl)
+                            if (email.isNotEmpty() && password.isNotEmpty()) {
+                                signInVM.registerWithEmail(email, password, context) { success ->
+                                    if (success) {
+                                        showAdditionalInfoDialog = true
+                                    } else {
+                                        Toast.makeText(context, "Registration Failed. Please try again.", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(context, "Please fill in both email and password", Toast.LENGTH_SHORT).show()
                             }
                         }, modifier = Modifier.width(245.dp)) {
                             Text("Register with Email")
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
+
+                        // Sign In Button for Email/Password
                         Button(onClick = {
                             signInVM.signInWithEmail(email, password, context) { success ->
                                 if (success) navigateToHome(navCtrl)
                             }
-                        }, modifier = Modifier.width(245.dp))
-                        {
+                        }, modifier = Modifier.width(245.dp)) {
                             Text("Sign In with Email")
                         }
-
-                        // Register Button for New Users
-
-
-
-
                     } else {
                         // Display User Info and Sign Out Button
                         if (currentUser!!.photoUrl != null) {
@@ -148,8 +173,7 @@ fun SignInScreen(
                                     .background(Color.Gray),
                                 contentScale = ContentScale.Crop
                             )
-                        }
-                        else {
+                        } else {
                             Image(
                                 painter = painterResource(id = R.drawable.user),
                                 contentDescription = "User Profile Picture",
@@ -163,7 +187,20 @@ fun SignInScreen(
 
                         Spacer(modifier = Modifier.height(26.dp))
 
-                        Text(text = "Welcome, ${currentUser!!.displayName ?: currentUser!!.email}")
+                        Text(
+                            text = "Welcome, $userDisplayName",
+                            fontSize = 24.sp, // Adjust the size as needed
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Display User's Age and Gender
+                        if (userAge != null && userGender != null) {
+
+                            Text(text = "Gender: $userGender")
+                            Text(text = "Age: $userAge")
+                        }
+
                         Spacer(modifier = Modifier.height(26.dp))
 
                         Button(onClick = {
@@ -172,9 +209,84 @@ fun SignInScreen(
                         }) {
                             Text("Sign Out")
                         }
-                        Spacer(modifier = Modifier.height(106.dp))
-
                     }
+                }
+
+                // Dialog to collect additional user info (age and gender)
+                if (showAdditionalInfoDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showAdditionalInfoDialog = false },
+                        title = { Text("Additional Information") },
+                        text = {
+                            Column {
+                                TextField(
+                                    value = age,
+                                    onValueChange = { age = it },
+                                    label = { Text("Age") },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+
+                                // Dropdown Menu for Gender Selection
+
+                                TextField(
+                                    value = displayName,
+                                    onValueChange = { displayName = it },
+                                    label = { Text("Display Name") },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                Spacer(modifier = Modifier.height(16.dp))
+
+
+                                Box {
+                                    OutlinedButton(onClick = { genderExpanded = !genderExpanded }) {
+                                        Text(text = if (gender.isEmpty()) "Select Gender" else gender)
+                                    }
+                                    DropdownMenu(
+                                        expanded = genderExpanded,
+                                        onDismissRequest = { genderExpanded = false }
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text("Male") },
+                                            onClick = {
+                                                gender = "Male"
+                                                genderExpanded = false
+                                            }
+                                        )
+                                        DropdownMenuItem(
+                                            text = { Text("Female") },
+                                            onClick = {
+                                                gender = "Female"
+                                                genderExpanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    if (age.isNotBlank() && gender.isNotBlank() && displayName.isNotBlank()) {
+                                        signInVM.saveAdditionalUserInfo(
+                                            email = currentUser?.email ?: email,
+                                            password = "", // Password not required for Google Sign-In
+                                            age = age.toInt(),
+                                            gender = gender,
+                                            displayName = displayName
+                                        )
+                                        showAdditionalInfoDialog = false
+                                        navigateToHome(navCtrl)
+                                    } else {
+                                        Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            ) {
+                                Text("Submit")
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -186,6 +298,7 @@ private fun navigateToHome(navCtrl: NavController) {
         popUpTo(EnumScreens.HOME.route) { inclusive = true }
     }
 }
+
 @Composable
 fun GoogleSignInButton(onClick: () -> Unit) {
     Button(onClick = onClick) {
