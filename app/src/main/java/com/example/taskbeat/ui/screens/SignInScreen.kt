@@ -99,9 +99,18 @@ fun SignInScreen(
                         )
                         Spacer(modifier = Modifier.height(56.dp))
 
+                        // Sign In Button for Google
 
+                        Spacer(modifier = Modifier.height(16.dp))
+                        GoogleSignInButton(onClick = {
+                            val googleSignInClient = GoogleSignIn.getClient(context, signInVM.getGoogleSignInOptions(context))
+                            val signInIntent = googleSignInClient.signInIntent
+                            launcher.launch(signInIntent)
+                        })
 
                         // Sign In Button for Email/Password
+
+                        Spacer(modifier = Modifier.height(16.dp))
 
                         Button(onClick = {
                             signInVM.registerWithEmail(email, password, context) { success ->
@@ -124,14 +133,7 @@ fun SignInScreen(
                         // Register Button for New Users
 
 
-                        Spacer(modifier = Modifier.height(16.dp))
-                        GoogleSignInButton(onClick = {
-                            val googleSignInClient = GoogleSignIn.getClient(context, signInVM.getGoogleSignInOptions(context))
-                            val signInIntent = googleSignInClient.signInIntent
-                            launcher.launch(signInIntent)
-                        })
 
-                        // Sign In Button for Google
 
                     } else {
                         // Display User Info and Sign Out Button
