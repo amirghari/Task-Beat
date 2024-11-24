@@ -49,14 +49,15 @@ class OfflineDataRepository(
     private val userDao = appDatabase.userDao()
     private val healthDao = appDatabase.healthDao()
 
+
     // User-related methods
     override suspend fun addUser(user: User) = userDao.insertUser(user)
     override fun getUserByEmail(email: String): Flow<User?> = userDao.getUserByEmail(email)
     override suspend fun deleteUserByEmail(email: String) = userDao.deleteUserByEmail(email)
 
     // Health data-related methods
-    override suspend fun addHealthData(health: Health) = healthDao.insertHealthData(health)
-    override fun getHealthDataByUserId(userId: Int): Flow<Health?> = healthDao.getHealthDataByUserId(userId)
-    override suspend fun updateHealthData(userId: Int, health: Health) = healthDao.updateHealthData(health)
-    override suspend fun deleteHealthDataByUserId(userId: Int) = healthDao.deleteHealthDataByUserId(userId)
+    override suspend fun addOrUpdateHealthData(health: Health) = healthDao.insertHealthData(health)
+    override fun getHealthDataByUserId(userId: Long): Flow<Health?> = healthDao.getHealthDataByUserId(userId)
+    override suspend fun deleteHealthDataByUserId(userId: Long) = healthDao.deleteHealthDataByUserId(userId)
+
 }

@@ -1,7 +1,6 @@
 package com.example.taskbeat.ui.navigation
 
-import HeartRateScreen
-import HomeScreen
+import com.example.taskbeat.ui.screens.HeartRateScreen
 import SignInScreen
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -29,7 +28,6 @@ fun TaskBeatNavHost(
         composable(EnumScreens.SETTINGS.route) { SettingsScreen(navController) }
         composable(EnumScreens.STEPS_COUNTER.route) { StepsCounterScreen(navController) }
         composable(EnumScreens.WORKOUT_TIME.route) { WorkoutTimeScreen(navController) }
-        composable(EnumScreens.HEART_RATE.route) { HeartRateScreen(navController) }
         composable(EnumScreens.BODY_COMPOSITION.route) { BodyCompositionScreen(navController) }
         composable(EnumScreens.WATER.route) { WaterScreen(navController) }
         composable(EnumScreens.BLOOD_PRESSURE.route) { BloodPressureScreen(navController) }

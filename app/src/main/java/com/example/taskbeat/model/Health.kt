@@ -16,10 +16,10 @@ import androidx.room.PrimaryKey
 )
 data class Health(
     @PrimaryKey(autoGenerate = true) val healthId: Int = 0,
-    @ColumnInfo(name = "user_id") val userId: Int, // Foreign key to User table
-    @ColumnInfo(name = "heart_rate") val heartRate: Int,
-    @ColumnInfo(name = "water_intake") val waterIntake: Int,
-    @ColumnInfo(name = "bmi") val bmi: Double,
-    @ColumnInfo(name = "blood_pressure") val bloodPressure: String,
-    @ColumnInfo(name = "blood_glucose") val bloodGlucose: Double
+    @ColumnInfo(name = "user_id") val userId: Long = 0L, // Changed from Int to Long
+    @ColumnInfo(name = "heart_rate_readings") val heartRateReadings: List<Int> = emptyList(),
+    @ColumnInfo(name = "water_intake") val waterIntake: Int = 0,
+    @ColumnInfo(name = "bmi") val bmi: Double = 0.0,
+    @ColumnInfo(name = "blood_pressure") val bloodPressure: String = "",
+    @ColumnInfo(name = "blood_glucose") val bloodGlucose: Double = 0.0
 )

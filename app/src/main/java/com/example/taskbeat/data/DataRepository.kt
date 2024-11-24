@@ -10,13 +10,11 @@ interface DataRepository {
     suspend fun toggleTheme()
 
     suspend fun addUser(user: User)
-    suspend fun addHealthData(health: Health)
+    suspend fun addOrUpdateHealthData(health: Health)
 
     fun getUserByEmail(email: String): Flow<User?>
-    fun getHealthDataByUserId(userId: Int): Flow<Health?>
-
-    suspend fun updateHealthData(userId: Int, health: Health)
+    fun getHealthDataByUserId(userId: Long): Flow<Health?>
 
     suspend fun deleteUserByEmail(email: String)
-    suspend fun deleteHealthDataByUserId(userId: Int)
+    suspend fun deleteHealthDataByUserId(userId: Long)
 }

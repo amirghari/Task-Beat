@@ -322,8 +322,8 @@ fun SignInScreen(
 }
 
 private fun navigateToHome(navCtrl: NavController) {
-    navCtrl.navigate(EnumScreens.HOME.route) {
-        popUpTo(EnumScreens.HOME.route) { inclusive = true }
+    navCtrl.navigate(EnumScreens.HEART_RATE.route) {
+        popUpTo(EnumScreens.HEART_RATE.route) { inclusive = true }
     }
 }
 
