@@ -29,15 +29,7 @@ fun WaterScreen(
     val dailyGoal = 2000 // in mL
     var waterIntake by remember { mutableStateOf(0) }
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = "Water Intake Tracker",
-                canNavigateBack = true,
-                onNavigateUp = { navCtrl.navigateUp() }
-            )
-        }
-    ) { paddingValues ->
+    Scaffold() { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)

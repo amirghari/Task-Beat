@@ -86,15 +86,8 @@ fun HeartRateScreen(
     var showWarningDialog by remember { mutableStateOf(false) }
     var dismissWarning by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = "Heart Rate",
-                canNavigateBack = true,
-                onNavigateUp = { navCtrl.navigateUp() },
-            )
-        }
-    ) { paddingValues ->
+  Scaffold()
+    { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)

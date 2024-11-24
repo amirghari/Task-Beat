@@ -28,6 +28,7 @@ import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 
+
 @Composable
 fun SignInScreen(
     navCtrl: NavController,
@@ -39,6 +40,10 @@ fun SignInScreen(
     val userAge by signInVM.userAge.collectAsState()
     val userGender by signInVM.userGender.collectAsState()
     val userDisplayName by signInVM.userDisplayName.collectAsState()
+
+    val isPrefDarkTheme by signInVM.isDarkTheme.collectAsState()
+    val lineColor = MaterialTheme.colorScheme.onSurface
+
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -82,13 +87,13 @@ fun SignInScreen(
     }
 
     Scaffold(
-        topBar = {
-            TopBar(
-                title = "Sign In",
-                canNavigateBack = true,
-                onNavigateUp = { navCtrl.navigateUp() }
-            )
-        }
+//        topBar = {
+//            TopBar(
+//                title = "Sign In",
+//                canNavigateBack = true,
+//                onNavigateUp = { navCtrl.navigateUp() }
+//            )
+//        }
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -162,6 +167,7 @@ fun SignInScreen(
                         }
                     } else {
                         // Display User Info and Sign Out Button
+                        Spacer(modifier = Modifier.height(100.dp))
                         if (currentUser!!.photoUrl != null) {
                             val photoUrl = currentUser!!.photoUrl
                             AsyncImage(
@@ -185,7 +191,7 @@ fun SignInScreen(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(26.dp))
+                        Spacer(modifier = Modifier.height(40.dp))
 
                         Text(
                             text = "Welcome, $userDisplayName",
@@ -201,7 +207,27 @@ fun SignInScreen(
                             Text(text = "Age: $userAge")
                         }
 
-                        Spacer(modifier = Modifier.height(26.dp))
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                                .background(Color.Transparent),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            Switch(
+                                checked = isPrefDarkTheme,
+                                onCheckedChange = { signInVM.toggleTheme() },
+                                modifier = Modifier.padding(end = 16.dp),
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    uncheckedThumbColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.primaryContainer
+                                )
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(146.dp))
+
 
                         Button(onClick = {
                             signInVM.signOut()
@@ -211,6 +237,8 @@ fun SignInScreen(
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(246.dp))
+
 
                 // Dialog to collect additional user info (age and gender)
                 if (showAdditionalInfoDialog) {

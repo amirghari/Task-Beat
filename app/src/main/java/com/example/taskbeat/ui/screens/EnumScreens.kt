@@ -17,7 +17,7 @@ enum class EnumScreens(val route: String, val displayName: String, val icon: Ima
     WATER("water", "Water", Icons.Filled.Star),
     BLOOD_PRESSURE("blood_pressure", "BP", Icons.Filled.Info),
     BLOOD_GLUCOSE("blood_glucose", "Glucose", Icons.Filled.AddCircle),
-    SIGN_IN("sign_in", "Sign In", Icons.Filled.AccountCircle);
+    SIGN_IN("sign_in", "You", Icons.Filled.AccountCircle);
 
     /**
      * Generate a route with parameters by replacing placeholders.

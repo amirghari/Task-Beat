@@ -21,6 +21,8 @@ import kotlinx.coroutines.withContext
 class SignInViewModel(
     private val dataRepo: DataRepository,
 ) : ViewModel() {
+    private var _isDarkTheme = MutableStateFlow<Boolean>(false)
+    val isDarkTheme: StateFlow<Boolean> = _isDarkTheme
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -38,6 +40,12 @@ class SignInViewModel(
 
     private val _userDisplayName = MutableStateFlow<String?>(null)
     val userDisplayName: StateFlow<String?> = _userDisplayName
+
+    init {
+        viewModelScope.launch {
+            dataRepo.isDarkThemeFlow.collect { _isDarkTheme.emit(it) }
+        }
+    }
 
     fun signInWithGoogle(account: GoogleSignInAccount, context: Context, onResult: (Boolean) -> Unit) {
         _isLoading.value = true
@@ -154,4 +162,7 @@ class SignInViewModel(
             onResult(false)
         }
     }
+
+    fun toggleTheme() = viewModelScope.launch { dataRepo.toggleTheme() }
+
 }

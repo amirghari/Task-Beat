@@ -29,15 +29,7 @@ fun BodyCompositionScreen(
     val heightInMeters = height / 100
     val bmi = if (heightInMeters > 0) weight / (heightInMeters * heightInMeters) else 0f
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = "Body Composition",
-                canNavigateBack = true,
-                onNavigateUp = { navCtrl.navigateUp() }
-            )
-        }
-    ) { paddingValues ->
+    Scaffold() { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)

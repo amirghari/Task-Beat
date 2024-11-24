@@ -6,6 +6,7 @@ import SignInScreen
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,10 +20,11 @@ fun TaskBeatNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = EnumScreens.HOME.route,
+        startDestination = EnumScreens.HEART_RATE.route,
         modifier = modifier
     ) {
-        composable(EnumScreens.HOME.route) { HomeScreen(navController) }
+//        composable(EnumScreens.HOME.route) { HomeScreen(navController) }
+        composable(EnumScreens.HEART_RATE.route) { HeartRateScreen(navController) }
         composable(EnumScreens.SIGN_IN.route) { SignInScreen(navController) }
         composable(EnumScreens.SETTINGS.route) { SettingsScreen(navController) }
         composable(EnumScreens.STEPS_COUNTER.route) { StepsCounterScreen(navController) }
@@ -38,11 +40,12 @@ fun TaskBeatNavHost(
 @Composable
 fun BottomNavBar(navController: NavHostController) {
     val navItems = listOf(
-        EnumScreens.HOME,
+//        EnumScreens.HOME,
         EnumScreens.HEART_RATE,
         EnumScreens.WATER,
         EnumScreens.BODY_COMPOSITION,
-        EnumScreens.BLOOD_PRESSURE
+        EnumScreens.BLOOD_PRESSURE,
+        EnumScreens.SIGN_IN,
     )
 
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
@@ -55,7 +58,10 @@ fun BottomNavBar(navController: NavHostController) {
                         Icon(imageVector = screen.icon, contentDescription = screen.displayName)
                     }
                 },
-                label = { Text(screen.displayName) },
+                label = { Text(
+                    screen.displayName,
+                    fontSize = 10.sp,)
+                        },
                 selected = currentRoute == screen.route,
                 onClick = {
                     if (currentRoute != screen.route) {

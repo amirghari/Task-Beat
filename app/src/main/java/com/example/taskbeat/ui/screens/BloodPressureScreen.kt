@@ -31,15 +31,7 @@ fun BloodPressureScreen(
     // Observing last recorded blood pressure value from ViewModel
 //    val lastRecorded by bloodPressureVM.lastRecorded.collectAsState()
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = "Blood Pressure Tracker",
-                canNavigateBack = true,
-                onNavigateUp = { navCtrl.navigateUp() }
-            )
-        }
-    ) { paddingValues ->
+    Scaffold() { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)
