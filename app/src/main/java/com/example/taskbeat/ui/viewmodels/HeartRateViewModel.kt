@@ -72,12 +72,16 @@ class HeartRateViewModel(
 
         viewModelScope.launch {
             delay(15000) // Measure for 15 seconds
-            val heartRateValue = calculateHeartRateFromFrames()
+            var heartRateValue = calculateHeartRateFromFrames()
             _heartRate.value = heartRateValue
             _isMeasuring.value = false
-            Log.d("HeartRateViewModel", "Heart rate measurement ended with value: $heartRateValue BPM")
 
+            Log.d("HeartRateViewModel", "Heart rate value: $heartRateValue")
             saveHeartRateToDatabase(heartRateValue)
+
+
+
+
         }
     }
 
@@ -141,26 +145,31 @@ class HeartRateViewModel(
             val existingHealthData = dataRepo.getHealthDataByUserId(userId).firstOrNull()
 
             val updatedHeartRates = existingHealthData?.heartRateReadings?.toMutableList() ?: mutableListOf()
-            updatedHeartRates.add(heartRateValue) // Append new heart rate value
+            if ( heartRateValue>130 || heartRateValue<50) {
+                Log.e("HeartRateViewModel", "Heart rate value is out of range: $heartRateValue")
+            }
+            else {
+                // Append new heart rate value
+                updatedHeartRates.add(heartRateValue)
+                val updatedTimestamps =
+                    existingHealthData?.timestamps?.toMutableList() ?: mutableListOf()
+                updatedTimestamps.add(Date())
 
-            val updatedTimestamps = existingHealthData?.timestamps?.toMutableList() ?: mutableListOf()
-            updatedTimestamps.add(Date()) // Append new timestamp
+                val newHealthData = existingHealthData?.copy(
+                    heartRateReadings = updatedHeartRates,
+                    timestamps = updatedTimestamps
+                ) ?: Health(
+                    userId = userId,
+                    heartRateReadings = listOf(heartRateValue),
+                    timestamps = listOf(Date()),
+                    waterIntake = 0,
+                    bmi = 0.0,
+                    bloodPressure = "",
+                    bloodGlucose = 0.0
+                )
 
-            // Create new or update existing health data
-            val newHealthData = existingHealthData?.copy(
-                heartRateReadings = updatedHeartRates,
-                timestamps = updatedTimestamps
-            ) ?: Health(
-                userId = userId,
-                heartRateReadings = listOf(heartRateValue),
-                timestamps = listOf(Date()),
-                waterIntake = 0,
-                bmi = 0.0,
-                bloodPressure = "",
-                bloodGlucose = 0.0
-            )
-
-            dataRepo.addOrUpdateHealthData(newHealthData)
+                dataRepo.addOrUpdateHealthData(newHealthData)
+            }
         }
     }
 

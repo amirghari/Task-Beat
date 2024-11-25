@@ -11,8 +11,10 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -26,6 +28,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -86,6 +89,16 @@ fun HeartRateScreen(
             }
         }
     )
+    // Circle Rotation while measuring
+    val infiniteTransition = rememberInfiniteTransition()
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1000), // 1 second for a full spin
+            repeatMode = RepeatMode.Restart
+        )
+    )
 
     // Observe isMeasuring to stop the camera when measurement ends
     LaunchedEffect(isMeasuring) {
@@ -129,31 +142,40 @@ fun HeartRateScreen(
                         .size(200.dp)
                         .scale(heartScale) // Apply the scaling animation
                 )
-                Spacer(modifier = Modifier.height(6.dp))
-
-                HeartRateChart(heartrateVM = heartrateVM)
-                Spacer(modifier = Modifier.height(6.dp))
-
-
                 if (isMeasuring) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     AndroidView(
                         factory = { previewView },
                         modifier = Modifier
-                            .size(1.dp) // Reduced size since we're not displaying the preview
+                            .size(20.dp) // Reduced size since we're not displaying the preview
                             .clip(CircleShape)
                     )
                 }
 
+                HeartRateChart(heartrateVM = heartrateVM)
+
+
+
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Box(
-                    modifier = Modifier
-                        .size(140.dp)
-                        .clip(CircleShape)
-                        .border(14.dp, Color(0xFF7EBD8F), CircleShape),
+                    modifier = Modifier.size(140.dp),
                     contentAlignment = Alignment.Center
                 ) {
+                    // Rotating border
+                    Box(
+                        modifier = Modifier
+                            .size(140.dp)
+                            .clip(CircleShape)
+                            .border(
+                                width = 14.dp,
+                                color = Color(0xFF7EBD8F),
+                                shape = CircleShape
+                            )
+                            .then(if (isMeasuring) Modifier.rotate(rotation) else Modifier)
+                    )
+
+                    // Static Text (BPM value)
                     Text(
                         text = "${heartRate ?: "--"} BPM",
                         fontSize = 25.sp,
