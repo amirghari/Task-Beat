@@ -1,25 +1,25 @@
+// WaterScreen.kt
+
 package com.example.taskbeat.ui.screens
 
-import TopBar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.taskbeat.R
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.example.taskbeat.ui.viewmodels.WaterViewModel
+
 
 @Composable
 fun WaterScreen(
@@ -27,25 +27,27 @@ fun WaterScreen(
     waterVM: WaterViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val dailyGoal = 2000 // in mL
-    var waterIntake by remember { mutableStateOf(0) }
+    val waterIntake by waterVM.waterIntake.observeAsState(null)
+    val intake = waterIntake ?: 0
 
-    Scaffold() { paddingValues ->
+    Scaffold { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),  // Use theme-aware background color
+                .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
             WaterIntakeContent(
-                waterIntake = waterIntake,
+                waterIntake = intake,
                 dailyGoal = dailyGoal,
-                onAddWater = { waterIntake += 250 },
-                onRemoveWater = { if (waterIntake >= 250) waterIntake -= 250 }
+                onAddWater = { waterVM.addWaterIntake(250) },
+                onRemoveWater = { waterVM.removeWaterIntake(250) }
             )
         }
     }
 }
+
 
 @Composable
 fun WaterIntakeContent(
@@ -72,7 +74,6 @@ fun WaterIntakeContent(
         Text(
             text = "$waterIntake mL",
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
         )
 

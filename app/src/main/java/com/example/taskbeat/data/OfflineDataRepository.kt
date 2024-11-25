@@ -60,4 +60,8 @@ class OfflineDataRepository(
     override fun getHealthDataByUserId(userId: Long): Flow<Health?> = healthDao.getHealthDataByUserId(userId)
     override suspend fun deleteHealthDataByUserId(userId: Long) = healthDao.deleteHealthDataByUserId(userId)
 
+    override suspend fun updateWaterIntake(userId: Long, waterIntake: Int) {
+        healthDao.updateWaterIntake(userId, waterIntake)
+    }
+
 }

@@ -21,4 +21,7 @@ interface HealthDao {
 
     @Query("SELECT * FROM health")
     fun getAllHealthData(): Flow<List<Health>>
+
+    @Query("UPDATE health SET water_intake = :waterIntake WHERE user_id = :userId")
+    suspend fun updateWaterIntake(userId: Long, waterIntake: Int)
 }
