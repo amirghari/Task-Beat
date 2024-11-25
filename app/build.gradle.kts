@@ -75,6 +75,9 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
 
+    // Add the missing runtime-livedata dependency
+    implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
+
     // Room and DataStore dependencies
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)

@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.nio.ByteBuffer
+import java.util.Date
 
 class HeartRateViewModel(
     private val dataRepo: DataRepository
@@ -136,30 +137,28 @@ class HeartRateViewModel(
                 return@launch
             }
 
-            Log.d("HeartRateViewModel", "Saving heart rate data for userId: $userId")
-
             val existingHealthData = dataRepo.getHealthDataByUserId(userId).firstOrNull()
-            Log.d("HeartRateViewModel", "Existing Health Data before update: $existingHealthData")
 
             val updatedHeartRates = existingHealthData?.heartRateReadings?.toMutableList() ?: mutableListOf()
             updatedHeartRates.add(heartRateValue)
-            Log.d("HeartRateViewModel", "Updated Heart Rate Readings: $updatedHeartRates")
+
+            val updatedTimestamps = existingHealthData?.timestamps?.toMutableList() ?: mutableListOf()
+            updatedTimestamps.add(Date()) // Add current timestamp
 
             val newHealthData = existingHealthData?.copy(
-                heartRateReadings = updatedHeartRates
+                heartRateReadings = updatedHeartRates,
+                timestamps = updatedTimestamps
             ) ?: Health(
                 userId = userId,
                 heartRateReadings = listOf(heartRateValue),
+                timestamps = listOf(Date()),
                 waterIntake = 0,
                 bmi = 0.0,
                 bloodPressure = "",
                 bloodGlucose = 0.0
             )
 
-            Log.d("HeartRateViewModel", "New Health Data to be saved: $newHealthData")
-
             dataRepo.addOrUpdateHealthData(newHealthData)
-            Log.d("HeartRateViewModel", "Heart rate data saved successfully")
         }
     }
 

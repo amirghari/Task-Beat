@@ -12,7 +12,7 @@ import com.example.taskbeat.model.User
 import com.example.taskbeat.model.Health
 import kotlin.concurrent.Volatile
 
-@Database(entities = [User::class, Health::class], version = 2, exportSchema = false)
+@Database(entities = [User::class, Health::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao

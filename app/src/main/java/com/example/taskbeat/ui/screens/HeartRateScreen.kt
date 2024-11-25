@@ -120,7 +120,7 @@ fun HeartRateScreen(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(13.dp))
 
                 Image(
                     painter = painterResource(id = R.drawable.heart_image),
@@ -129,9 +129,14 @@ fun HeartRateScreen(
                         .size(200.dp)
                         .scale(heartScale) // Apply the scaling animation
                 )
+                Spacer(modifier = Modifier.height(6.dp))
+
+                HeartRateChart(heartrateVM = heartrateVM)
+                Spacer(modifier = Modifier.height(6.dp))
+
 
                 if (isMeasuring) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     AndroidView(
                         factory = { previewView },
                         modifier = Modifier
@@ -140,7 +145,7 @@ fun HeartRateScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Box(
                     modifier = Modifier
@@ -161,7 +166,7 @@ fun HeartRateScreen(
                     showWarningDialog = true
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(13.dp))
 
                 Button(
                     onClick = {
@@ -188,19 +193,6 @@ fun HeartRateScreen(
                         color = Color.White
                     )
                 }
-                Spacer(modifier = Modifier.height(32.dp))
-                Text(
-                    text = "Average Heart Rate:",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(32.dp))
-                Text(
-                    text = averageHeartRate.let { "${String.format("%.1f", it)} BPM" } ?: "-- BPM",
-                    fontSize = 25.sp,
-                    color = Color(0xFF7EBD8F)
-                )
-
 
             }
 
