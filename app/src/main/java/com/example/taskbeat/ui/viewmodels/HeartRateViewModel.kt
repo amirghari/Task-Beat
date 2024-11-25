@@ -137,14 +137,16 @@ class HeartRateViewModel(
                 return@launch
             }
 
+            // Get existing health data
             val existingHealthData = dataRepo.getHealthDataByUserId(userId).firstOrNull()
 
             val updatedHeartRates = existingHealthData?.heartRateReadings?.toMutableList() ?: mutableListOf()
-            updatedHeartRates.add(heartRateValue)
+            updatedHeartRates.add(heartRateValue) // Append new heart rate value
 
             val updatedTimestamps = existingHealthData?.timestamps?.toMutableList() ?: mutableListOf()
-            updatedTimestamps.add(Date()) // Add current timestamp
+            updatedTimestamps.add(Date()) // Append new timestamp
 
+            // Create new or update existing health data
             val newHealthData = existingHealthData?.copy(
                 heartRateReadings = updatedHeartRates,
                 timestamps = updatedTimestamps

@@ -50,20 +50,16 @@ fun HeartRateChart(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(250.dp)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp)
         ) {
-            val spacing = 50f
+            val spacing = 30f
             val barWidth = 40f
             val maxRate = 100f
             val minRate = 40f
             val yStepCount = 4
             val yInterval = (maxRate - minRate) / yStepCount
-            val xStep = if (labels.size > 1) {
-                (size.width - spacing * 2) / (labels.size - 1)
-            } else {
-                // When there's only one data point, center it with proper spacing
-                (size.width - spacing * 2) / 2
-            }
+            val availableWidth = size.width - spacing * 2
+            val xStep = availableWidth / (labels.size + 1)
             val yStep = (size.height - spacing) / (maxRate - minRate)
 
             // Draw horizontal lines
@@ -94,7 +90,7 @@ fun HeartRateChart(
 
             // Draw bars for each day's average heart rate with rounded tops
             for (i in averages.indices) {
-                val x = spacing + (i * xStep) + (xStep - barWidth) / 2
+                val x = spacing + (i * xStep) + barWidth / 2
                 val barHeight = (averages[i] - minRate) * yStep
                 val y = size.height - spacing - barHeight
 
@@ -102,7 +98,7 @@ fun HeartRateChart(
                     color = if (averages[i] < 60) Color(0xFF7EBD8F) else Color(0xFF7EBD8F),
                     topLeft = Offset(x, y),
                     size = Size(barWidth, barHeight),
-                    cornerRadius = CornerRadius(30f, 30f)
+                    cornerRadius = CornerRadius(30f, 30f) // Rounded top, flat bottom
                 )
 
                 // Draw the value above the bar
@@ -124,8 +120,8 @@ fun HeartRateChart(
             // Draw X-axis labels (dates) directly under the bars with same margin
             drawIntoCanvas { canvas ->
                 for (i in labels.indices) {
-                    val x = spacing + (i * xStep) + (xStep - barWidth) / 2 + barWidth / 2
-                    val y = size.height - spacing / 4
+                    val x = spacing + (i * xStep) + barWidth
+                    val y = size.height + 10f
                     canvas.nativeCanvas.drawText(
                         labels[i],
                         x,
