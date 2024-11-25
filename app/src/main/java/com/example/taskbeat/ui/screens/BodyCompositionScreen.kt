@@ -1,10 +1,10 @@
 package com.example.taskbeat.ui.screens
 
-import TopBar
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,9 +27,17 @@ fun BodyCompositionScreen(
     var height by remember { mutableStateOf(170f) }
 
     val heightInMeters = height / 100
-    val bmi = if (heightInMeters > 0) weight / (heightInMeters * heightInMeters) else 0f
+    val bmiValue = if (heightInMeters > 0) weight / (heightInMeters * heightInMeters) else 0f
 
-    Scaffold() { paddingValues ->
+    // Observe BMI from ViewModel
+    val bmi by bodyCompositionVM.bmi.observeAsState(0.0)
+
+    LaunchedEffect(bmiValue) {
+        // Update BMI in ViewModel whenever bmiValue changes
+        bodyCompositionVM.updateBMI(bmiValue.toDouble())
+    }
+
+    Scaffold { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)
@@ -67,7 +75,7 @@ fun BodyCompositionScreen(
                 )
 
                 // BMI Circular Display
-                BMICircularDisplay(bmi = bmi)
+                BMICircularDisplay(bmi = bmiValue)
             }
         }
     }
@@ -172,9 +180,3 @@ fun BMICircularDisplay(bmi: Float) {
         )
     }
 }
-
-// Explanation:
-// 1. Scaffold: Provides a consistent layout structure with a top bar.
-// 2. CircularInput: Custom composable to create a circular gauge input.
-// 3. BMICircularDisplay: Custom composable to display the BMI in a circular gauge with color-coded feedback.
-//    - Yellow for BMI < 20, Green for 22 <= BMI <= 25, and Red for BMI > 28.

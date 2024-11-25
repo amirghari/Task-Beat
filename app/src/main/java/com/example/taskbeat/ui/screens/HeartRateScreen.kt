@@ -162,19 +162,7 @@ fun HeartRateScreen(
                     modifier = Modifier.size(140.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    // Rotating border
-                    Box(
-                        modifier = Modifier
-                            .size(140.dp)
-                            .clip(CircleShape)
-                            .border(
-                                width = 14.dp,
-                                color = Color(0xFF7EBD8F),
-                                shape = CircleShape
-                            )
-                            .then(if (isMeasuring) Modifier.rotate(rotation) else Modifier)
-                    )
-
+                    CustomSpinner(isMeasuring = isMeasuring)
                     // Static Text (BPM value)
                     Text(
                         text = "${heartRate ?: "--"} BPM",

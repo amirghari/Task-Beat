@@ -57,11 +57,17 @@ class OfflineDataRepository(
 
     // Health data-related methods
     override suspend fun addOrUpdateHealthData(health: Health) = healthDao.insertHealthData(health)
-    override fun getHealthDataByUserId(userId: Long): Flow<Health?> = healthDao.getHealthDataByUserId(userId)
-    override suspend fun deleteHealthDataByUserId(userId: Long) = healthDao.deleteHealthDataByUserId(userId)
+    override fun getHealthDataByUserId(userId: Long): Flow<Health?> =
+        healthDao.getHealthDataByUserId(userId)
+
+    override suspend fun deleteHealthDataByUserId(userId: Long) =
+        healthDao.deleteHealthDataByUserId(userId)
 
     override suspend fun updateWaterIntake(userId: Long, waterIntake: Int) {
         healthDao.updateWaterIntake(userId, waterIntake)
     }
 
+    override suspend fun updateBMI(userId: Long, bmi: Double) {
+        healthDao.updateBMI(userId, bmi)
+    }
 }
