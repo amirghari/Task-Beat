@@ -32,7 +32,9 @@ class BodyCompositionViewModel(
     val weight: LiveData<Double> = currentUserId.switchMap { userId ->
         if (userId != null) {
             dataRepo.getHealthDataByUserId(userId).asLiveData().map { health ->
-                health?.weight ?: 56.0
+                val weightValue = health?.weight ?: 56.0
+                Log.d("BodyCompositionVM", "Retrieved weight for userId $userId: $weightValue")
+                weightValue
             }
         } else {
             MutableLiveData(56.0)
@@ -42,7 +44,9 @@ class BodyCompositionViewModel(
     val height: LiveData<Double> = currentUserId.switchMap { userId ->
         if (userId != null) {
             dataRepo.getHealthDataByUserId(userId).asLiveData().map { health ->
-                health?.height ?: 170.0
+                val heightValue = health?.height ?: 170.0
+                Log.d("BodyCompositionVM", "Retrieved height for userId $userId: $heightValue")
+                heightValue
             }
         } else {
             MutableLiveData(170.0)
@@ -58,26 +62,27 @@ class BodyCompositionViewModel(
             val userId = _currentUserId.value
             if (userId != null) {
                 val existingHealthData = dataRepo.getHealthDataByUserId(userId).firstOrNull()
-                if (existingHealthData != null) {
-                    // Update existing health data
-                    val updatedHealthData = existingHealthData.copy(
+                val healthData = if (existingHealthData != null) {
+                    existingHealthData.copy(
                         weight = weightValue,
                         height = heightValue,
                         bmi = bmiValue
                     )
-                    dataRepo.addOrUpdateHealthData(updatedHealthData)
-                    Log.d("BodyCompositionVM", "BMI, weight, and height updated for userId: $userId")
                 } else {
-                    // Create new health data
-                    val newHealthData = Health(
+                    Health(
                         userId = userId,
                         weight = weightValue,
                         height = heightValue,
-                        bmi = bmiValue
+                        bmi = bmiValue,
+                        heartRateReadings = emptyList(),
+                        timestamps = emptyList(),
+                        waterIntake = 0,
+                        bloodPressure = "",
+                        bloodGlucose = 0.0
                     )
-                    dataRepo.addOrUpdateHealthData(newHealthData)
-                    Log.d("BodyCompositionVM", "New Health data created with BMI, weight, and height for userId: $userId")
                 }
+                dataRepo.insertHealthData(healthData)
+                Log.d("BodyCompositionVM", "BMI, weight, and height updated for userId: $userId")
             } else {
                 Log.e("BodyCompositionVM", "User ID is null. Cannot update BMI.")
             }

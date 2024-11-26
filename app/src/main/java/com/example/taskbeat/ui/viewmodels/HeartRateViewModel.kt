@@ -141,34 +141,31 @@ class HeartRateViewModel(
                 return@launch
             }
 
-            // Get existing health data
-            val existingHealthData = dataRepo.getHealthDataByUserId(userId).firstOrNull()
-
-            val updatedHeartRates = existingHealthData?.heartRateReadings?.toMutableList() ?: mutableListOf()
-            if ( heartRateValue>130 || heartRateValue<50) {
+            if (heartRateValue > 130 || heartRateValue < 50) {
                 Log.e("HeartRateViewModel", "Heart rate value is out of range: $heartRateValue")
-            }
-            else {
-                // Append new heart rate value
+            } else {
+                // Get existing health data
+                val existingHealthData = dataRepo.getHealthDataByUserId(userId).firstOrNull()
+
+                val updatedHeartRates = existingHealthData?.heartRateReadings?.toMutableList() ?: mutableListOf()
                 updatedHeartRates.add(heartRateValue)
-                val updatedTimestamps =
-                    existingHealthData?.timestamps?.toMutableList() ?: mutableListOf()
+
+                val updatedTimestamps = existingHealthData?.timestamps?.toMutableList() ?: mutableListOf()
                 updatedTimestamps.add(Date())
 
-                val newHealthData = existingHealthData?.copy(
-                    heartRateReadings = updatedHeartRates,
-                    timestamps = updatedTimestamps
-                ) ?: Health(
-                    userId = userId,
-                    heartRateReadings = listOf(heartRateValue),
-                    timestamps = listOf(Date()),
-                    waterIntake = 0,
-                    bmi = 0.0,
-                    bloodPressure = "",
-                    bloodGlucose = 0.0
-                )
-
-                dataRepo.addOrUpdateHealthData(newHealthData)
+                if (existingHealthData != null) {
+                    // Update only the heart rate readings and timestamps
+                    dataRepo.updateHeartRateData(userId, updatedHeartRates, updatedTimestamps)
+                } else {
+                    // If no existing health data, insert a new record with only heart rate data
+                    val newHealthData = Health(
+                        userId = userId,
+                        heartRateReadings = updatedHeartRates,
+                        timestamps = updatedTimestamps
+                        // Other fields will have default values
+                    )
+                    dataRepo.insertHealthData(newHealthData)
+                }
             }
         }
     }
