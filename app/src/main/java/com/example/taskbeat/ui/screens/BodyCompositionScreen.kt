@@ -26,36 +26,52 @@ fun BodyCompositionScreen(
     val weightFromVM by bodyCompositionVM.weight.observeAsState()
     val heightFromVM by bodyCompositionVM.height.observeAsState()
 
-    var weight by remember { mutableStateOf(56f) }
-    var height by remember { mutableStateOf(170f) }
+    var weight by remember { mutableStateOf<Float?>(null) }
+    var height by remember { mutableStateOf<Float?>(null) }
 
+    // Initialize weight when weightFromVM is loaded and weight is null
     LaunchedEffect(weightFromVM) {
         val weightValue = weightFromVM
-        if (weightValue != null) {
+        if (weightValue != null && weight == null) {
             weight = weightValue.toFloat()
         }
     }
 
+    // Initialize height when heightFromVM is loaded and height is null
     LaunchedEffect(heightFromVM) {
         val heightValue = heightFromVM
-        if (heightValue != null) {
+        if (heightValue != null && height == null) {
             height = heightValue.toFloat()
         }
     }
 
-    val heightInMeters = height / 100
-    val bmiValue = if (heightInMeters > 0) weight / (heightInMeters * heightInMeters) else 0f
+    // Show a loading indicator if data is not yet available
+    if (weight == null || height == null) {
+        // Display a loading indicator
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
 
-    // Observe BMI from ViewModel
-    val bmi by bodyCompositionVM.bmi.observeAsState(0.0)
+    // Now weight and height are non-null
+    val weightValue = weight!!
+    val heightValue = height!!
+
+    val heightInMeters = heightValue / 100
+    val bmiValue = if (heightInMeters > 0) weightValue / (heightInMeters * heightInMeters) else 0f
 
     // Observe currentUserId from ViewModel
     val userId by bodyCompositionVM.currentUserId.observeAsState()
 
-    LaunchedEffect(bmiValue, weight, height, userId) {
+    // Update BMI when weight or height changes
+    LaunchedEffect(bmiValue, weightValue, heightValue, userId) {
         if (userId != null) {
             // Update BMI, weight, and height in ViewModel whenever they change and userId is available
-            bodyCompositionVM.updateBMI(weight.toDouble(), height.toDouble(), bmiValue.toDouble())
+            bodyCompositionVM.updateBMI(weightValue.toDouble(), heightValue.toDouble(), bmiValue.toDouble())
         }
     }
 
@@ -81,7 +97,7 @@ fun BodyCompositionScreen(
                 // Weight Input Representation
                 CircularInput(
                     label = "Weight",
-                    value = weight,
+                    value = weightValue,
                     unit = "kg",
                     onValueChange = { weight = it },
                     maxValue = 200f
@@ -90,7 +106,7 @@ fun BodyCompositionScreen(
                 // Height Input Representation
                 CircularInput(
                     label = "Height",
-                    value = height,
+                    value = heightValue,
                     unit = "cm",
                     onValueChange = { height = it },
                     maxValue = 250f

@@ -14,6 +14,7 @@ import com.example.taskbeat.model.Health
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import java.util.Date
 
 class OfflineDataRepository(
     context: Context,
@@ -62,6 +63,18 @@ class OfflineDataRepository(
 
     override suspend fun deleteHealthDataByUserId(userId: Long) =
         healthDao.deleteHealthDataByUserId(userId)
+
+    override suspend fun insertHealthData(health: Health) {
+        healthDao.insertHealthData(health)
+    }
+
+    override suspend fun updateHealthData(health: Health) {
+        healthDao.updateHealthData(health)
+    }
+
+    override suspend fun updateHeartRateData(userId: Long, heartRateReadings: List<Int>, timestamps: List<Date>) {
+        healthDao.updateHeartRateData(userId, heartRateReadings, timestamps)
+    }
 
     override suspend fun updateWaterIntake(userId: Long, waterIntake: Int) {
         healthDao.updateWaterIntake(userId, waterIntake)

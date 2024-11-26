@@ -3,6 +3,7 @@ package com.example.taskbeat.data
 import androidx.room.*
 import com.example.taskbeat.model.Health
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 @Dao
 interface HealthDao {
@@ -21,6 +22,9 @@ interface HealthDao {
 
     @Query("SELECT * FROM health")
     fun getAllHealthData(): Flow<List<Health>>
+
+    @Query("UPDATE health SET heart_rate_readings = :heartRateReadings, timestamps = :timestamps WHERE user_id = :userId")
+    suspend fun updateHeartRateData(userId: Long, heartRateReadings: List<Int>, timestamps: List<Date>)
 
     @Query("UPDATE health SET water_intake = :waterIntake WHERE user_id = :userId")
     suspend fun updateWaterIntake(userId: Long, waterIntake: Int)

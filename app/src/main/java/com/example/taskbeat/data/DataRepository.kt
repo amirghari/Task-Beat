@@ -3,6 +3,7 @@ package com.example.taskbeat.data
 import com.example.taskbeat.model.User
 import com.example.taskbeat.model.Health
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 interface DataRepository {
     val isDarkThemeFlow: Flow<Boolean>
@@ -17,6 +18,11 @@ interface DataRepository {
 
     suspend fun deleteUserByEmail(email: String)
     suspend fun deleteHealthDataByUserId(userId: Long)
+
+    suspend fun insertHealthData(health: Health)
+    suspend fun updateHealthData(health: Health)
+    suspend fun updateHeartRateData(userId: Long, heartRateReadings: List<Int>, timestamps: List<Date>)
+
 
     suspend fun updateWaterIntake(userId: Long, waterIntake: Int)
 
