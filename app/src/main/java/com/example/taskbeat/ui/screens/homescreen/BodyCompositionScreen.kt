@@ -23,8 +23,25 @@ fun BodyCompositionScreen(
     navCtrl: NavController,
     bodyCompositionVM: BodyCompositionViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val weightFromVM by bodyCompositionVM.weight.observeAsState()
+    val heightFromVM by bodyCompositionVM.height.observeAsState()
+
     var weight by remember { mutableStateOf(56f) }
     var height by remember { mutableStateOf(170f) }
+
+    LaunchedEffect(weightFromVM) {
+        val weightValue = weightFromVM
+        if (weightValue != null) {
+            weight = weightValue.toFloat()
+        }
+    }
+
+    LaunchedEffect(heightFromVM) {
+        val heightValue = heightFromVM
+        if (heightValue != null) {
+            height = heightValue.toFloat()
+        }
+    }
 
     val heightInMeters = height / 100
     val bmiValue = if (heightInMeters > 0) weight / (heightInMeters * heightInMeters) else 0f
@@ -32,9 +49,14 @@ fun BodyCompositionScreen(
     // Observe BMI from ViewModel
     val bmi by bodyCompositionVM.bmi.observeAsState(0.0)
 
-    LaunchedEffect(bmiValue) {
-        // Update BMI in ViewModel whenever bmiValue changes
-        bodyCompositionVM.updateBMI(bmiValue.toDouble())
+    // Observe currentUserId from ViewModel
+    val userId by bodyCompositionVM.currentUserId.observeAsState()
+
+    LaunchedEffect(bmiValue, weight, height, userId) {
+        if (userId != null) {
+            // Update BMI, weight, and height in ViewModel whenever they change and userId is available
+            bodyCompositionVM.updateBMI(weight.toDouble(), height.toDouble(), bmiValue.toDouble())
+        }
     }
 
     Scaffold { paddingValues ->
@@ -51,7 +73,7 @@ fun BodyCompositionScreen(
             ) {
                 // Title Text
                 Text(
-                    text = "Start Calculate Your BMI",
+                    text = "Calculate Your BMI",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
