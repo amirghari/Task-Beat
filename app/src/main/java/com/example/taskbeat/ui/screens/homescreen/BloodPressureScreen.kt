@@ -1,4 +1,4 @@
-package com.example.taskbeat.ui.screens
+package com.example.taskbeat.ui.screens.homescreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,7 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.taskbeat.R
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
-import com.example.taskbeat.ui.viewmodels.BloodPressureViewModel
+import com.example.taskbeat.ui.viewmodels.home.BloodPressureViewModel
 
 @Composable
 fun BloodPressureScreen(

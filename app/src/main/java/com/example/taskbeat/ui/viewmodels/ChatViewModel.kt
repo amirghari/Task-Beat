@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.taskbeat.data.DataRepository
 import com.example.taskbeat.data.Gemma22BModel
-import com.example.taskbeat.ui.components.GemmaUiState
-import com.example.taskbeat.ui.components.MODEL_PREFIX
-import com.example.taskbeat.ui.components.USER_PREFIX
-import com.example.taskbeat.ui.components.UiState
+import com.example.taskbeat.ui.components.chat.GemmaUiState
+import com.example.taskbeat.ui.components.chat.MODEL_PREFIX
+import com.example.taskbeat.ui.components.chat.USER_PREFIX
+import com.example.taskbeat.ui.components.chat.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

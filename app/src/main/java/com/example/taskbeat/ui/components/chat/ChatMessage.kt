@@ -1,4 +1,4 @@
-package com.example.taskbeat.ui.components
+package com.example.taskbeat.ui.components.chat
 
 import java.util.UUID
 

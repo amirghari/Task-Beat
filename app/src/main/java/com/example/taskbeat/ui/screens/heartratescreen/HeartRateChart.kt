@@ -1,4 +1,4 @@
-package com.example.taskbeat.ui.screens
+package com.example.taskbeat.ui.screens.heartratescreen
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*

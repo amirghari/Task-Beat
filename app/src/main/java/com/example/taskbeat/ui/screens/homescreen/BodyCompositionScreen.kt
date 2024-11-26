@@ -1,4 +1,4 @@
-package com.example.taskbeat.ui.screens
+package com.example.taskbeat.ui.screens.homescreen
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
-import com.example.taskbeat.ui.viewmodels.BodyCompositionViewModel
+import com.example.taskbeat.ui.viewmodels.home.BodyCompositionViewModel
 
 @Composable
 fun BodyCompositionScreen(

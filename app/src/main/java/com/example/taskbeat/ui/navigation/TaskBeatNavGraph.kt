@@ -1,7 +1,6 @@
 package com.example.taskbeat.ui.navigation
 
-import com.example.taskbeat.ui.screens.HeartRateScreen
-import SignInScreen
+import com.example.taskbeat.ui.screens.heartratescreen.HeartRateScreen
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,16 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.taskbeat.ui.screens.*
-import com.example.taskbeat.ui.screens.BloodGlucoseScreen
-import com.example.taskbeat.ui.screens.BloodPressureScreen
-import com.example.taskbeat.ui.screens.BodyCompositionScreen
-import com.example.taskbeat.ui.screens.chatscreen.ChatScreen
-import com.example.taskbeat.ui.screens.chatscreen.LoadingChatScreen
-import com.example.taskbeat.ui.screens.EnumScreens
-import com.example.taskbeat.ui.screens.SettingsScreen
-import com.example.taskbeat.ui.screens.StepsCounterScreen
-import com.example.taskbeat.ui.screens.WaterScreen
-import com.example.taskbeat.ui.screens.WorkoutTimeScreen
+import com.example.taskbeat.ui.screens.chatscreen.*
+import com.example.taskbeat.ui.screens.homescreen.*
 
 @Composable
 fun TaskBeatNavHost(
@@ -29,13 +20,12 @@ fun TaskBeatNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = EnumScreens.HEART_RATE.route,
+        startDestination = EnumScreens.HOME.route,
         modifier = modifier
     ) {
-//        composable(EnumScreens.HOME.route) { HomeScreen(navController) }
+        composable(EnumScreens.HOME.route) { HomeScreen(navController) }
         composable(EnumScreens.HEART_RATE.route) { HeartRateScreen(navController) }
         composable(EnumScreens.SIGN_IN.route) { SignInScreen(navController) }
-        composable(EnumScreens.SETTINGS.route) { SettingsScreen(navController) }
         composable(EnumScreens.STEPS_COUNTER.route) { StepsCounterScreen(navController) }
         composable(EnumScreens.WORKOUT_TIME.route) { WorkoutTimeScreen(navController) }
         composable(EnumScreens.BODY_COMPOSITION.route) { BodyCompositionScreen(navController) }
@@ -62,11 +52,9 @@ fun TaskBeatNavHost(
 @Composable
 fun BottomNavBar(navController: NavHostController) {
     val navItems = listOf(
-//        EnumScreens.HOME,
+        EnumScreens.HOME,
         EnumScreens.HEART_RATE,
         EnumScreens.LOADING_CHAT,
-        EnumScreens.BODY_COMPOSITION,
-        EnumScreens.BLOOD_PRESSURE,
         EnumScreens.SIGN_IN,
     )
 
@@ -80,22 +68,10 @@ fun BottomNavBar(navController: NavHostController) {
                         Icon(imageVector = screen.icon, contentDescription = screen.displayName)
                     }
                 },
-                label = { Text(
-                    screen.displayName,
-                    fontSize = 10.sp,)
-                        },
+                label = { Text(screen.displayName, fontSize = 10.sp) },
                 selected = currentRoute == screen.route,
-                onClick = {
-                    if (currentRoute != screen.route) {
-                        navController.navigate(screen.route) {
-                            popUpTo(EnumScreens.HOME.route) { saveState = true }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                }
+                onClick = { navController.navigate(screen.route) }
             )
         }
     }
 }
-

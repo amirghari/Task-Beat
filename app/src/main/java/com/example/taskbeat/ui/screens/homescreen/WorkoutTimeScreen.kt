@@ -1,4 +1,4 @@
-package com.example.taskbeat.ui.screens
+package com.example.taskbeat.ui.screens.homescreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -8,19 +8,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.taskbeat.ui.screens.TopBar
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
-import com.example.taskbeat.ui.viewmodels.HomeViewModel
-import com.example.taskbeat.ui.viewmodels.SettingsViewModel
+import com.example.taskbeat.ui.viewmodels.home.WorkoutTimeViewModel
 
 @Composable
-fun SettingsScreen(
+fun WorkoutTimeScreen(
     navCtrl: NavController,
-    settingsVM: SettingsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    workoutTimeVM: WorkoutTimeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     Scaffold(
         topBar = {
             TopBar(
-                title = "Reminders",
+                title = "",
                 canNavigateBack = true,
                 onNavigateUp = { navCtrl.navigateUp() }
             )
@@ -29,7 +29,7 @@ fun SettingsScreen(
         Box(
             modifier = Modifier.padding(paddingValues)
         ) {
-            Text("Settings Screen")
+            Text("Workout time Screen")
         }
     }
 }

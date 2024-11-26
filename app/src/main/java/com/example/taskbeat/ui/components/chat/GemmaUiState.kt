@@ -1,6 +1,5 @@
-package com.example.taskbeat.ui.components
+package com.example.taskbeat.ui.components.chat
 
-import android.util.Log
 import androidx.compose.runtime.toMutableStateList
 
 /**

@@ -1,4 +1,4 @@
-package com.example.taskbeat.ui.viewmodels
+package com.example.taskbeat.ui.viewmodels.home
 
 import androidx.lifecycle.ViewModel
 import com.example.taskbeat.data.DataRepository

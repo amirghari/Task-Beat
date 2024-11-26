@@ -1,4 +1,4 @@
-package com.example.taskbeat.ui.components
+package com.example.taskbeat.ui.components.chat
 
 interface UiState {
     val messages: List<ChatMessage>

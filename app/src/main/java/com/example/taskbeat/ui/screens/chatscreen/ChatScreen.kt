@@ -38,8 +38,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.taskbeat.R
-import com.example.taskbeat.ui.components.ChatMessage
-import com.example.taskbeat.ui.components.UiState
+import com.example.taskbeat.ui.components.chat.ChatMessage
+import com.example.taskbeat.ui.components.chat.UiState
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.example.taskbeat.ui.viewmodels.ChatViewModel
 

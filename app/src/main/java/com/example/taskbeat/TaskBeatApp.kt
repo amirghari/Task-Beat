@@ -17,7 +17,7 @@ import com.example.taskbeat.ui.navigation.BottomNavBar
 fun TaskBeatApp(navCtrl: NavHostController = rememberNavController()) {
     Scaffold(
         bottomBar = {
-            BottomNavBar(navCtrl) // Add bottom navigation bar with 5 categories
+            BottomNavBar(navCtrl)
         }
     ) { innerPadding ->
         TaskBeatNavHost(navCtrl, Modifier.padding(innerPadding)) // Main navigation host
