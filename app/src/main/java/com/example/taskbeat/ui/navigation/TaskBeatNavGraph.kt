@@ -11,6 +11,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.taskbeat.ui.screens.*
+import com.example.taskbeat.ui.screens.BloodGlucoseScreen
+import com.example.taskbeat.ui.screens.BloodPressureScreen
+import com.example.taskbeat.ui.screens.BodyCompositionScreen
+import com.example.taskbeat.ui.screens.chatscreen.ChatScreen
+import com.example.taskbeat.ui.screens.chatscreen.LoadingChatScreen
+import com.example.taskbeat.ui.screens.EnumScreens
+import com.example.taskbeat.ui.screens.SettingsScreen
+import com.example.taskbeat.ui.screens.StepsCounterScreen
+import com.example.taskbeat.ui.screens.WaterScreen
+import com.example.taskbeat.ui.screens.WorkoutTimeScreen
 
 @Composable
 fun TaskBeatNavHost(
@@ -32,6 +42,20 @@ fun TaskBeatNavHost(
         composable(EnumScreens.WATER.route) { WaterScreen(navController) }
         composable(EnumScreens.BLOOD_PRESSURE.route) { BloodPressureScreen(navController) }
         composable(EnumScreens.BLOOD_GLUCOSE.route) { BloodGlucoseScreen(navController) }
+
+        composable(route = EnumScreens.LOADING_CHAT.route) {
+            LoadingChatScreen(
+                onModelLoaded = {
+                    navController.navigate(EnumScreens.CHAT.route) {
+                        popUpTo(EnumScreens.LOADING_CHAT.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+        composable(route = EnumScreens.CHAT.route) {
+            ChatScreen(navController)
+        }
     }
 }
 
@@ -40,7 +64,7 @@ fun BottomNavBar(navController: NavHostController) {
     val navItems = listOf(
 //        EnumScreens.HOME,
         EnumScreens.HEART_RATE,
-        EnumScreens.WATER,
+        EnumScreens.LOADING_CHAT,
         EnumScreens.BODY_COMPOSITION,
         EnumScreens.BLOOD_PRESSURE,
         EnumScreens.SIGN_IN,

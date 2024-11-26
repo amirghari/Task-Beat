@@ -1,3 +1,5 @@
+package com.example.taskbeat.ui.screens
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,7 +33,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.taskbeat.R
-import com.example.taskbeat.ui.screens.EnumScreens
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.example.taskbeat.ui.viewmodels.HomeViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -94,8 +95,7 @@ fun HomeScreen(
                             onClick = {
                                 navCtrl.navigate(EnumScreens.SIGN_IN.route)
                             }
-                        )
-                        {
+                        ) {
                             Image(
                                 painter = painterResource(id = R.drawable.user),
                                 contentDescription = "User Profile Picture",
@@ -130,8 +130,7 @@ fun HomeScreen(
         }
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues)
+            modifier = Modifier.padding(paddingValues)
                 .background(MaterialTheme.colorScheme.surface)
                 .fillMaxSize()
         ) {
