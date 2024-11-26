@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.1"
+agp = "8.6.0"
 coil = "2.3.0"
 coilCompose = "2.2.1"
 converterGson = "2.9.0"
@@ -17,6 +17,7 @@ navigationCompose = "2.8.2"
 retrofit = "2.9.0"
 roomCommon = "2.6.1"
 roomKtx = "2.6.1"
+tasksGenai = "0.10.18"
 workRuntimeKtx = "2.9.1"
 runtimeLivedata = "1.7.3"
 firebaseAuthKtx = "23.1.0"
@@ -58,6 +59,7 @@ firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx",
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx", version.ref = "firebasePerfKtx" }
 
+tasks-genai = { module = "com.google.mediapipe:tasks-genai", version.ref = "tasksGenai" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

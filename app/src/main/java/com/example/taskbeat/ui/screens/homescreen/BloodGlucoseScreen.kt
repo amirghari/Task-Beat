@@ -1,6 +1,5 @@
-package com.example.taskbeat.ui.screens
+package com.example.taskbeat.ui.screens.homescreen
 
-import TopBar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,15 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.taskbeat.R
+import com.example.taskbeat.ui.screens.TopBar
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
-import com.example.taskbeat.ui.viewmodels.BloodGlucoseViewModel
+import com.example.taskbeat.ui.viewmodels.home.BloodGlucoseViewModel
 
 @Composable
 fun BloodGlucoseScreen(

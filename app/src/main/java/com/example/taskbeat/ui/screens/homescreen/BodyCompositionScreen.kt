@@ -1,10 +1,10 @@
-package com.example.taskbeat.ui.screens
+package com.example.taskbeat.ui.screens.homescreen
 
-import TopBar
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,28 +16,66 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
-import com.example.taskbeat.ui.viewmodels.BodyCompositionViewModel
+import com.example.taskbeat.ui.viewmodels.home.BodyCompositionViewModel
 
 @Composable
 fun BodyCompositionScreen(
     navCtrl: NavController,
     bodyCompositionVM: BodyCompositionViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    var weight by remember { mutableStateOf(56f) }
-    var height by remember { mutableStateOf(170f) }
+    val weightFromVM by bodyCompositionVM.weight.observeAsState()
+    val heightFromVM by bodyCompositionVM.height.observeAsState()
 
-    val heightInMeters = height / 100
-    val bmi = if (heightInMeters > 0) weight / (heightInMeters * heightInMeters) else 0f
+    var weight by remember { mutableStateOf<Float?>(null) }
+    var height by remember { mutableStateOf<Float?>(null) }
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = "Body Composition",
-                canNavigateBack = true,
-                onNavigateUp = { navCtrl.navigateUp() }
-            )
+    // Initialize weight when weightFromVM is loaded and weight is null
+    LaunchedEffect(weightFromVM) {
+        val weightValue = weightFromVM
+        if (weightValue != null && weight == null) {
+            weight = weightValue.toFloat()
         }
-    ) { paddingValues ->
+    }
+
+    // Initialize height when heightFromVM is loaded and height is null
+    LaunchedEffect(heightFromVM) {
+        val heightValue = heightFromVM
+        if (heightValue != null && height == null) {
+            height = heightValue.toFloat()
+        }
+    }
+
+    // Show a loading indicator if data is not yet available
+    if (weight == null || height == null) {
+        // Display a loading indicator
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
+    // Now weight and height are non-null
+    val weightValue = weight!!
+    val heightValue = height!!
+
+    val heightInMeters = heightValue / 100
+    val bmiValue = if (heightInMeters > 0) weightValue / (heightInMeters * heightInMeters) else 0f
+
+    // Observe currentUserId from ViewModel
+    val userId by bodyCompositionVM.currentUserId.observeAsState()
+
+    // Update BMI when weight or height changes
+    LaunchedEffect(bmiValue, weightValue, heightValue, userId) {
+        if (userId != null) {
+            // Update BMI, weight, and height in ViewModel whenever they change and userId is available
+            bodyCompositionVM.updateBMI(weightValue.toDouble(), heightValue.toDouble(), bmiValue.toDouble())
+        }
+    }
+
+    Scaffold { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)
@@ -51,7 +89,7 @@ fun BodyCompositionScreen(
             ) {
                 // Title Text
                 Text(
-                    text = "Start Calculate Your BMI",
+                    text = "Calculate Your BMI",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -59,7 +97,7 @@ fun BodyCompositionScreen(
                 // Weight Input Representation
                 CircularInput(
                     label = "Weight",
-                    value = weight,
+                    value = weightValue,
                     unit = "kg",
                     onValueChange = { weight = it },
                     maxValue = 200f
@@ -68,14 +106,14 @@ fun BodyCompositionScreen(
                 // Height Input Representation
                 CircularInput(
                     label = "Height",
-                    value = height,
+                    value = heightValue,
                     unit = "cm",
                     onValueChange = { height = it },
                     maxValue = 250f
                 )
 
                 // BMI Circular Display
-                BMICircularDisplay(bmi = bmi)
+                BMICircularDisplay(bmi = bmiValue)
             }
         }
     }
@@ -180,9 +218,3 @@ fun BMICircularDisplay(bmi: Float) {
         )
     }
 }
-
-// Explanation:
-// 1. Scaffold: Provides a consistent layout structure with a top bar.
-// 2. CircularInput: Custom composable to create a circular gauge input.
-// 3. BMICircularDisplay: Custom composable to display the BMI in a circular gauge with color-coded feedback.
-//    - Yellow for BMI < 20, Green for 22 <= BMI <= 25, and Red for BMI > 28.

@@ -1,39 +1,30 @@
 package com.example.taskbeat.data
 
-import com.example.taskbeat.model.ParliamentMember
-import com.example.taskbeat.model.ParliamentMemberExtra
-import com.example.taskbeat.model.ParliamentMemberLocal
+import com.example.taskbeat.model.User
+import com.example.taskbeat.model.Health
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 interface DataRepository {
     val isDarkThemeFlow: Flow<Boolean>
 
     suspend fun toggleTheme()
 
-    suspend fun addParliamentMember(data: ParliamentMember)
-    suspend fun addParliamentMemberExtra(data: ParliamentMemberExtra)
+    suspend fun addUser(user: User)
+    suspend fun addOrUpdateHealthData(health: Health)
 
-    fun getAllParliamentMembers(): Flow<List<ParliamentMember>>
-    fun getAllParliamentMembersExtra(): Flow<List<ParliamentMemberExtra>>
+    fun getUserByEmail(email: String): Flow<User?>
+    fun getHealthDataByUserId(userId: Long): Flow<Health?>
 
-    suspend fun fetchParliamentMembersData(): List<ParliamentMember>
-    suspend fun fetchParliamentMembersExtraData(): List<ParliamentMemberExtra>
+    suspend fun deleteUserByEmail(email: String)
+    suspend fun deleteHealthDataByUserId(userId: Long)
 
-    fun getMemberWithId(id: Int): Flow<ParliamentMember>
-    fun getMemberExtraWithId(id: Int): Flow<ParliamentMemberExtra>
-    fun getMemberLocalWithId(id: Int): Flow<ParliamentMemberLocal?>
+    suspend fun insertHealthData(health: Health)
+    suspend fun updateHealthData(health: Health)
+    suspend fun updateHeartRateData(userId: Long, heartRateReadings: List<Int>, timestamps: List<Date>)
 
-    fun getParties(): Flow<List<String>>
-    fun getConstituencies(): Flow<List<String>>
-    fun getAllPMWithParty(party: String): Flow<List<ParliamentMember>>
-    fun getAllPMWithConstituency(constituency: String): Flow<List<ParliamentMember>>
 
-    suspend fun addParliamentLocal(data: ParliamentMemberLocal)
-    fun getAllPMIds(): Flow<List<Int>>
+    suspend fun updateWaterIntake(userId: Long, waterIntake: Int)
 
-    suspend fun updateNoteWithId(id: Int, note: String?)
-    suspend fun deleteNoteWithId(id: Int)
-
-    fun getFavoriteById(id: Int): Flow<Boolean>
-    suspend fun toggleFavorite(id: Int)
+    suspend fun updateBMI(userId: Long, bmi: Double)
 }

@@ -1,6 +1,5 @@
-package com.example.taskbeat.ui.screens
+package com.example.taskbeat.ui.screens.homescreen
 
-import TopBar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,7 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.taskbeat.R
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
-import com.example.taskbeat.ui.viewmodels.BloodPressureViewModel
+import com.example.taskbeat.ui.viewmodels.home.BloodPressureViewModel
 
 @Composable
 fun BloodPressureScreen(
@@ -31,15 +30,7 @@ fun BloodPressureScreen(
     // Observing last recorded blood pressure value from ViewModel
 //    val lastRecorded by bloodPressureVM.lastRecorded.collectAsState()
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                title = "Blood Pressure Tracker",
-                canNavigateBack = true,
-                onNavigateUp = { navCtrl.navigateUp() }
-            )
-        }
-    ) { paddingValues ->
+    Scaffold() { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)

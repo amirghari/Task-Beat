@@ -1,11 +1,17 @@
 package com.example.taskbeat.ui.viewmodels
 
-import SignInViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.taskbeat.TaskBeatApplication
+import com.example.taskbeat.ui.viewmodels.home.BloodGlucoseViewModel
+import com.example.taskbeat.ui.viewmodels.home.BloodPressureViewModel
+import com.example.taskbeat.ui.viewmodels.home.BodyCompositionViewModel
+import com.example.taskbeat.ui.viewmodels.home.HomeViewModel
+import com.example.taskbeat.ui.viewmodels.home.StepsCounterViewModel
+import com.example.taskbeat.ui.viewmodels.home.WaterViewModel
+import com.example.taskbeat.ui.viewmodels.home.WorkoutTimeViewModel
 
 fun CreationExtras.pmApplication(): TaskBeatApplication =
     (this[APPLICATION_KEY] as TaskBeatApplication)
@@ -20,12 +26,6 @@ object AppViewModelProvider {
 
         initializer {
             HomeViewModel(
-                pmApplication().container.dataRepo
-            )
-        }
-
-        initializer {
-            SettingsViewModel(
                 pmApplication().container.dataRepo
             )
         }
@@ -74,6 +74,13 @@ object AppViewModelProvider {
         initializer {
             SignInViewModel(
                 pmApplication().container.dataRepo
+            )
+        }
+
+        initializer {
+            ChatViewModel(
+                pmApplication().container.dataRepo,
+                pmApplication().container.model
             )
         }
     }
