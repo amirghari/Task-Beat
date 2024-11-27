@@ -74,7 +74,7 @@ fun BloodGlucoseContent(
         Spacer(modifier = Modifier.height(46.dp))
 
         // Blood Glucose Input Field
-        TextField(
+        OutlinedTextField(
             value = glucoseLevel,
             onValueChange = onGlucoseChange,
             label = { Text("Glucose Level (mg/dL)") },
@@ -82,34 +82,33 @@ fun BloodGlucoseContent(
         )
 
         // Display Last Recorded Glucose Level
+        Spacer(modifier = Modifier.height(6.dp))
 
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .padding(16.dp)
-                .background(Color(0xFFE8F5E9), shape = CircleShape)
-                .padding(16.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.blood_glucose_icon),
-                contentDescription = "Blood Glucose Icon",
-                tint = Color(0xFFDE7C7D),
-                modifier = Modifier.size(36.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "${lastRecorded ?: "--"} mg/dL",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF7EBD8F)
-            )
+        lastRecorded?.let {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .background(Color(0xFFE8F5E9), shape = CircleShape)
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.blood_glucose_icon),
+                    contentDescription = "Blood Glucose Icon",
+                    tint = Color(0xFFDE7C7D),
+                    modifier = Modifier.size(36.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "${lastRecorded} mg/dL",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF7EBD8F)
+                )
+            }
+            Spacer(modifier = Modifier.height(30.dp))
         }
-
-        Spacer(modifier = Modifier.height(50.dp))
-
-
         // Save Button
         Button(
             onClick = {

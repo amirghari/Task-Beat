@@ -4,8 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,14 +25,14 @@ import com.example.taskbeat.ui.viewmodels.BloodPressureViewModel
 fun BloodPressureScreen(
     navCtrl: NavController,
     bloodPressureVM: BloodPressureViewModel = viewModel(factory = AppViewModelProvider.Factory)
-){
+) {
     var systolic by remember { mutableStateOf("") }
     var diastolic by remember { mutableStateOf("") }
 
     // Observing last recorded blood pressure value from ViewModel
-    val lastRecorded by bloodPressureVM.lastRecorded.collectAsState()
+    val lastRecorded by bloodPressureVM.lastRecorded.observeAsState()
 
-    Scaffold() { paddingValues ->
+    Scaffold { paddingValues ->
         Box(
             modifier = Modifier
                 .padding(paddingValues)
@@ -44,10 +46,9 @@ fun BloodPressureScreen(
                 onSystolicChange = { systolic = it },
                 onDiastolicChange = { diastolic = it },
                 onSavePressure = {
-                    // Save systolic and diastolic values using ViewModel
                     if (systolic.isNotBlank() && diastolic.isNotBlank()) {
                         bloodPressureVM.saveBloodPressure(systolic, diastolic)
-                        systolic = "" // Clear the input fields after saving
+                        systolic = ""
                         diastolic = ""
                     }
                 },
@@ -79,7 +80,7 @@ fun BloodPressureContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         // Blood Pressure Input Fields
-        TextField(
+        OutlinedTextField(
             value = systolic,
             onValueChange = onSystolicChange,
             label = { Text("Systolic (mmHg)") },
@@ -88,7 +89,7 @@ fun BloodPressureContent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        TextField(
+        OutlinedTextField(
             value = diastolic,
             onValueChange = onDiastolicChange,
             label = { Text("Diastolic (mmHg)") },
@@ -97,11 +98,37 @@ fun BloodPressureContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Display Last Recorded Blood Pressure
+        lastRecorded?.let {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .background(Color(0xFFE8F5E9), shape = CircleShape)
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.bc),
+                    contentDescription = "Blood Glucose Icon",
+                    tint = Color(0xFFDE7C7D),
+                    modifier = Modifier.size(36.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "${it.first} / ${it.second} mmHg",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF7EBD8F)
+                )
+            }
+            Spacer(modifier = Modifier.height(30.dp))
+        }
+
+
         // Save Button
         Button(
-            onClick = {
-                onSavePressure() // Call the save logic from the parent
-            },
+            onClick = onSavePressure,
             modifier = Modifier.size(width = 200.dp, height = 56.dp),
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EBD8F))
@@ -110,13 +137,5 @@ fun BloodPressureContent(
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-
-        // Display Last Recorded Blood Pressure Value
-        Text(
-            text = "Last Recorded: ${lastRecorded?.first ?: "--"} / ${lastRecorded?.second ?: "--"} mmHg",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF7EBD8F)
-        )
     }
 }
