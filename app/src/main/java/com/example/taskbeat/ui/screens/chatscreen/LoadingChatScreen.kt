@@ -15,11 +15,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Composable
-fun LoadingChatScreen(
-    onModelLoaded: () -> Unit = { }
-) {
+fun LoadingChatScreen(onModelLoaded: () -> Unit) {
     val context = LocalContext.current.applicationContext
-    val errorMessage by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+    var isDownloading by remember { mutableStateOf(true) }
     var isScreenVisible by remember { mutableStateOf(true) }
 
     DisposableEffect(Unit) {
@@ -27,23 +26,30 @@ fun LoadingChatScreen(
         onDispose { isScreenVisible = false }
     }
 
-    if (errorMessage != "") {
+    if (errorMessage.isNotEmpty()) {
         Log.e("DBG", errorMessage)
+        Text("Error $errorMessage")
     } else {
-        LoadingIndicator()
+        LoadingIndicator(if(isDownloading) "Downloading model" else "Loading model")
     }
 
+    // TO DO: Fix state update, nav and crash
     LaunchedEffect(Unit, block = {
         withContext(Dispatchers.IO) {
             try {
+                if (!Gemma22BModel.isOnLocalDevice(context)) {
+                    Gemma22BModel.downloadModel(context)
+                }
+                isDownloading = false
                 Gemma22BModel.getInstance(context)
                 withContext(Dispatchers.Main) {
                     if (isScreenVisible) {
                         onModelLoaded()
                     }
                 }
-            } catch (e: Exception) {
-                Log.e("DBG", "Error in LoadingChatScreen: $e")
+                            } catch (e: Exception) {
+                Log.e("DBG", "Error in model process: $e")
+                errorMessage = e.message ?: "Unknown error"
             }
         }
     })
