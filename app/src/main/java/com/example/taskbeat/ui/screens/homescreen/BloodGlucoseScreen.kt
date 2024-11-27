@@ -82,7 +82,7 @@ fun BloodGlucoseContent(
         )
 
         // Display Last Recorded Glucose Level
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         lastRecorded?.let {
             Row(
