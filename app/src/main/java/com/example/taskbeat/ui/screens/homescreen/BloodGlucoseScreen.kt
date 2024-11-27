@@ -118,7 +118,7 @@ fun BloodGlucoseContent(
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EBD8F))
         ) {
-            Text("Save Glucose Level", color = Color.White, fontWeight = FontWeight.Bold)
+            Text("Save", color = Color.White, fontWeight = FontWeight.Bold)
         }
 
         Spacer(modifier = Modifier.height(32.dp))

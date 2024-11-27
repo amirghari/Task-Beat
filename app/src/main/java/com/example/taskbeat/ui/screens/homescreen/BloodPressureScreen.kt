@@ -133,7 +133,7 @@ fun BloodPressureContent(
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EBD8F))
         ) {
-            Text("Save Blood Pressure", color = Color.White)
+            Text("Save", color = Color.White)
         }
 
         Spacer(modifier = Modifier.height(32.dp))

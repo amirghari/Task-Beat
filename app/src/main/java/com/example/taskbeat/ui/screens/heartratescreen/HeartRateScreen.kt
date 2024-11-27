@@ -87,10 +87,10 @@ fun HeartRateScreen(
     // Circle Rotation while measuring
     val infiniteTransition = rememberInfiniteTransition()
     val rotation by infiniteTransition.animateFloat(
-        initialValue = 0f,
+        initialValue = 10f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1000), // 1 second for a full spin
+            animation = tween(durationMillis = 400),
             repeatMode = RepeatMode.Restart
         )
     )
@@ -109,7 +109,7 @@ fun HeartRateScreen(
     val heartScale by animateFloatAsState(
         targetValue = if (isMeasuring) 1f else 1.05f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 300),
+            animation = tween(durationMillis = 1000),
             repeatMode = RepeatMode.Reverse
         )
     )
