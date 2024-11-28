@@ -22,10 +22,12 @@ class MainActivity : ComponentActivity() {
             val isDarkTheme by dataRepo.isDarkThemeFlow.collectAsState(initial = false)
 
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(arrayOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.POST_NOTIFICATIONS), 1)
             }
 
             TaskBeatTheme(darkTheme = isDarkTheme) {

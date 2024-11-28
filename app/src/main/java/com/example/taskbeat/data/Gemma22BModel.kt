@@ -1,33 +1,20 @@
 package com.example.taskbeat.data
 
-import android.Manifest
 import android.app.DownloadManager
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import com.example.taskbeat.network.ModelDownloadApi
-import com.example.taskbeat.network.createRetrofit
 import com.google.mediapipe.tasks.genai.llminference.LlmInference
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
 
 class Gemma22BModel(
     context: Context
@@ -94,9 +81,23 @@ class Gemma22BModel(
         }
 
         suspend fun downloadModel(context: Context) {
+            val fileName = "gemma2-2b-it-gpu-int8.bin"
             val targetDir = File(context.getExternalFilesDir(null), "model/llm")
             val targetFile = File(targetDir, "gemma2-2b-it-gpu-int8.bin")
-            val url = "https://www.dropbox.com/scl/fi/izoppx7o9nt5b85nmw86i/gemma2-2b-it-gpu-int8.bin?rlkey=4qhlup9a4gcucnth7pbg4lxdi&st=0ewpxvga&dl=1"
+
+            MODEL_PATH = "$targetDir/$fileName"
+
+            if (!targetDir.exists()) {
+                targetDir.mkdirs()
+                return
+            }
+
+            if (targetFile.exists()) {
+                Log.d("DBG", "File already exists")
+                return
+            }
+
+            val url = "https://www.dropbox.com/scl/fi/7975qvuf609j9emivewgm/gemma2-2b-it-gpu-int8.bin?rlkey=oy5p0l3554c6nxs61tni75qk8&st=oc62cyfd&dl=1"
             val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val request = DownloadManager.Request(Uri.parse(url))
 
@@ -107,12 +108,17 @@ class Gemma22BModel(
                 .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
                 .setAllowedOverRoaming(false)
 
-            val downloadId = downloadManager.enqueue(request)
-
-            monitorDownloadProgress(context, downloadManager, downloadId)
+            withContext(Dispatchers.IO) {
+                val downloadId = downloadManager.enqueue(request)
+                monitorDownloadProgress(context, downloadManager, downloadId)
+            }
         }
 
-        private suspend fun monitorDownloadProgress(context: Context, downloadManager: DownloadManager, downloadId: Long) {
+        private suspend fun monitorDownloadProgress(
+            context: Context,
+            downloadManager: DownloadManager,
+            downloadId: Long
+        ) {
             val query = DownloadManager.Query()
             query.setFilterById(downloadId)
 
@@ -122,169 +128,42 @@ class Gemma22BModel(
                 .setContentTitle("Downloading model")
                 .setProgress(100, 0, false)
 
-            withContext(Dispatchers.IO) {
-                var downloading = true
+            while (true) {
+                val cursor = downloadManager.query(query)
+                if (cursor != null && cursor.moveToFirst()) {
+                    val statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                    var status = -1
+                    if (statusIndex != 1) {
+                        status = cursor.getInt(statusIndex)
+                        Log.d("DBG", "Status $status")
+                    }
+                    val totalBytes = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
+                    val downloadedBytes = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
 
-                while (downloading) {
-                    val cursor = downloadManager.query(query)
-                    if (cursor != null && cursor.moveToFirst()) {
-                        val status = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-                        val totalBytes = cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
-                        val downloadedBytes = cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)
-
-                        when (status) {
-                            DownloadManager.STATUS_SUCCESSFUL -> {
-                                downloading = false
-                                builder.setContentText("Download complete")
-                                    .setProgress(0, 0, false)
-                                notificationManager.notify(downloadId.toInt(), builder.build())
-                            }
-                            DownloadManager.STATUS_FAILED -> {
-                                downloading = false
-                                builder.setContentText("Download failed")
-                                    .setProgress(0, 0, false)
-                                notificationManager.notify(downloadId.toInt(), builder.build())
-                            }
-                            DownloadManager.STATUS_RUNNING -> {
-                                val progress = (downloadedBytes * 100 / totalBytes)
-                                builder.setProgress(100, progress, false)
-                                    .setContentText("Downloading model: $progress%")
-                                notificationManager.notify(downloadId.toInt(), builder.build())
-                            }
+                    when (status) {
+                        DownloadManager.STATUS_SUCCESSFUL -> {
+                            builder.setContentText("Download complete")
+                                .setProgress(0, 0, false)
+                            notificationManager.notify(downloadId.toInt(), builder.build())
+                            return
+                        }
+                        DownloadManager.STATUS_FAILED -> {
+                            builder.setContentText("Download failed")
+                                .setProgress(0, 0, false)
+                            notificationManager.notify(downloadId.toInt(), builder.build())
+                            return
+                        }
+                        DownloadManager.STATUS_RUNNING -> {
+                            val progress = (downloadedBytes * 100 / totalBytes)
+                            builder.setProgress(100, progress, false)
+                                .setContentText("Downloading model: $progress%")
+                            notificationManager.notify(downloadId.toInt(), builder.build())
                         }
                     }
-                    cursor.close()
-
-                    delay(500)
                 }
+                cursor.close()
+                delay(500)
             }
         }
-
-
-//        suspend fun downloadAndSaveModelToExternalStorage(context: Context) {
-//            val fileId = "1QK5QejAyZSKUUpmSrMQ8qPQ0bYS0bGZl"
-//            val fileName = "gemma2-2b-it-gpu-int8.bin"
-//            val targetDirectory = File(context.filesDir, "model/llm")
-//
-//            if (!targetDirectory.exists()) {
-//                targetDirectory.mkdirs()
-//            }
-//
-//            val targetFile = File(targetDirectory, fileName)
-//
-//            if (targetFile.exists()) {
-//                Log.d("DBG", "File already exists at: ${targetFile.absolutePath}")
-//                return
-//            }
-//
-//            val retrofitModelDownload = createRetrofit("https://www.dropbox.com/")
-//            val api = retrofitModelDownload.create(ModelDownloadApi::class.java)
-//
-//            val channelId = "download_progress"
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                val channel = NotificationChannel(
-//                    channelId, "Download Progress",
-//                    NotificationManager.IMPORTANCE_LOW
-//                )
-//                val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//                notificationManager.createNotificationChannel(channel)
-//            }
-//
-//            val notificationManager = NotificationManagerCompat.from(context)
-//            val notificationId = 1
-//            val builder = NotificationCompat.Builder(context, channelId)
-//                .setContentTitle("Downloading model")
-//                .setContentText("Download in progress")
-//                .setSmallIcon(android.R.drawable.stat_sys_download)
-//                .setProgress(100, 0, true)
-//                .setOngoing(true)
-//
-//            if (ActivityCompat.checkSelfPermission(
-//                    context,
-//                    Manifest.permission.POST_NOTIFICATIONS
-//                ) != PackageManager.PERMISSION_GRANTED
-//            ) {
-//                return
-//            }
-//            notificationManager.notify(notificationId, builder.build())
-//
-//            try {
-//                val response = api.downloadFile()
-//                if (!response.isSuccessful) {
-//                    Log.d("DBG", "Download failed: ${response.message()}")
-//                    builder.setContentText("Download failed")
-//                        .setProgress(0, 0, false)
-//                        .setOngoing(false)
-//                        .setSmallIcon(android.R.drawable.stat_notify_error)
-//                    notificationManager.notify(notificationId, builder.build())
-//                    return
-//                }
-//
-//                val body = response.body() ?: throw IOException("Empty response body")
-//                val contentLength = body.contentLength()
-//
-//                builder.setProgress(100, 0, false)
-//
-//                if (ActivityCompat.checkSelfPermission(
-//                        context,
-//                        Manifest.permission.POST_NOTIFICATIONS
-//                    ) != PackageManager.PERMISSION_GRANTED
-//                ) {
-//                    return
-//                }
-//
-//                notificationManager.notify(notificationId, builder.build())
-//
-//                withContext(Dispatchers.IO) {
-//                    FileOutputStream(targetFile).use { outputStream ->
-//                        body.byteStream().use { inputStream ->
-//                            saveFileWithProgress(
-//                                inputStream,
-//                                outputStream,
-//                                contentLength
-//                            ) { progress ->
-//                                builder.setProgress(100, progress, false)
-//                                builder.setContentText("Downloading model: $progress%")
-//                                notificationManager.notify(notificationId, builder.build())
-//                            }
-//                        }
-//                    }
-//
-//                    builder.setContentText("Download complete")
-//                        .setProgress(0, 0, false)
-//                        .setOngoing(false)
-//                        .setSmallIcon(android.R.drawable.stat_sys_download_done)
-//                    notificationManager.notify(notificationId, builder.build())
-//                }
-//
-//                Log.d("DBG", "Model downloaded to: ${targetFile.absolutePath}")
-//            } catch (e: IOException) {
-//                Log.d("DBG", "Error saving file: ${e.message}")
-//                builder.setContentText("Download failed")
-//                    .setProgress(0, 0, false)
-//                    .setOngoing(false)
-//                    .setSmallIcon(android.R.drawable.stat_notify_error)
-//                notificationManager.notify(notificationId, builder.build())
-//            }
-//        }
-//
-//        private fun saveFileWithProgress(
-//            inputStream: InputStream,
-//            outputStream: FileOutputStream,
-//            contentLength: Long,
-//            onProgress: (progress: Int) -> Unit
-//        ) {
-//            val buffer = ByteArray(1024 * 1024)
-//            var downloadedBytes = 0L
-//            var bytesRead: Int
-//            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-//                outputStream.write(buffer, 0, bytesRead)
-//                downloadedBytes += bytesRead
-//
-//                val progress = ((downloadedBytes * 100) / contentLength).toInt()
-//                onProgress(progress)
-//            }
-//            outputStream.flush()
-//        }
     }
 }
