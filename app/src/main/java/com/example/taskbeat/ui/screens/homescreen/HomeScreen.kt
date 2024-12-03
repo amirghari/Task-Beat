@@ -122,7 +122,7 @@ fun HomeScreen(
                             contentAlignment = Alignment.BottomStart
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.x_logo),
+                                painter = painterResource(id = R.drawable.chat),
                                 contentDescription = "Chat Icon",
                                 modifier = Modifier
                                     .size(64.dp)
