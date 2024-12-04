@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TaskBeat"
+rootProject.name = "RhythmPlus"
 include(":app")
  

@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.taskbeat"
+    namespace = "com.example.rhythmplus"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.taskbeat"
+        applicationId = "com.example.rhythmplus"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
