@@ -59,7 +59,7 @@ fun HeartRateChart(
             val spacing = 30f
             val barWidth = 60f
             val availableWidth = size.width - spacing * 2
-            val xStep = availableWidth / (labels.size + 1)
+            val xStep = availableWidth / labels.size
             val yStep = (size.height - spacing) / (maxRate - minRate)
 
             // Draw horizontal lines
@@ -90,7 +90,7 @@ fun HeartRateChart(
 
             // Draw bars for each day's average heart rate with rounded tops
             for (i in averages.indices) {
-                val x = spacing + (i * (xStep - 140)) + barWidth / 2
+                val x = spacing + (i * xStep) + (xStep - barWidth) / 2
                 val barHeight = (averages[i] - minRate) * yStep
                 val y = size.height - spacing - barHeight
 
@@ -120,7 +120,7 @@ fun HeartRateChart(
             // Draw X-axis labels (dates) directly under the bars with same margin
             drawIntoCanvas { canvas ->
                 for (i in labels.indices) {
-                    val x = spacing + (i * (xStep - 140)) + barWidth
+                    val x = spacing + (i * xStep) + xStep / 2
                     val y = size.height + 10f
                     canvas.nativeCanvas.drawText(
                         labels[i],
