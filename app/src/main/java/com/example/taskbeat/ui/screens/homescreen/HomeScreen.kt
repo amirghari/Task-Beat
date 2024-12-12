@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,11 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.taskbeat.R
@@ -46,130 +44,77 @@ fun HomeScreen(
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
 
-    Scaffold(
-        // Scaffold content if needed
-    ) { paddingValues ->
-        Column(
+    Scaffold { paddingValues ->
+        LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
                 .background(MaterialTheme.colorScheme.surface)
-                .verticalScroll(rememberScrollState())
                 .fillMaxSize()
-                .verticalScroll(scrollState)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 12.dp,
-                        vertical = 4.dp
-                    ),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                // Example Home Boxes
-                Box(
+
+            // Static header or content before scrollable items
+            item {
+                Spacer(modifier = Modifier.height(15.dp))
+
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 4.dp)
-                        .height(150.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable { navCtrl.navigate(EnumScreens.HEART_RATE.route) }
-                        .background(
-                            MaterialTheme.colorScheme.tertiaryContainer,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .padding(8.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        horizontalAlignment = Alignment.Start
+                        .fillMaxWidth()
+                       , // Ensure minimal padding ,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+
+                    Box(
+                        modifier = Modifier
+                            .weight(2.0f) // Increase weight for wider box
+                            // Add spacing between items
                     ) {
-                        Text(
-                            text = "Heart Rate",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.BottomStart
+                        HomeItemBox(
+                            title = "Heart",
+                            description = "",
+                            iconResId = R.drawable.heart_image
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.heart_image),
-                                contentDescription = "Heart Rate Icon",
-                                modifier = Modifier
-                                    .size(64.dp)
-                                    .padding(start = 8.dp, bottom = 16.dp),
-                                contentScale = ContentScale.Crop
-                            )
+                            navCtrl.navigate(EnumScreens.HEART_RATE.route)
                         }
                     }
-                }
 
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(150.dp)
-                        .padding(horizontal = 4.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable { navCtrl.navigate(EnumScreens.LOADING_CHAT.route) }
-                        .background(
-                            MaterialTheme.colorScheme.tertiaryContainer,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .padding(8.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        horizontalAlignment = Alignment.Start
+                    Box(
+                        modifier = Modifier
+                            .weight(2.0f) // Increase weight for wider box
+                             // Add spacing between items
                     ) {
-                        Text(
-                            text = "Chat",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.BottomStart
+                        HomeItemBox(
+                            title = "Chat",
+                            description = "",
+                            iconResId = R.drawable.chat
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.chat),
-                                contentDescription = "Chat Icon",
-                                modifier = Modifier
-                                    .size(64.dp)
-                                    .padding(start = 8.dp, bottom = 16.dp),
-                                contentScale = ContentScale.Crop
-                            )
+                            navCtrl.navigate(EnumScreens.LOADING_CHAT.route)
                         }
                     }
                 }
             }
 
-            // Other Home Items with Icons
-            HomeItemBox(
-                title = "Water",
-                description = "1234",
-                iconResId = R.drawable.water_bottle
-            ) { navCtrl.navigate(EnumScreens.WATER.route) }
-
-            HomeItemBox(
-                title = "Body Composition",
-                description = "123",
-                iconResId = R.drawable.bc
-            ) { navCtrl.navigate(EnumScreens.BODY_COMPOSITION.route) }
-
-            HomeItemBox(
-                title = "Blood Pressure",
-                description = "123",
-                iconResId = R.drawable.blood_pressure_gauge
-            ) { navCtrl.navigate(EnumScreens.BLOOD_PRESSURE.route) }
-
-            HomeItemBox(
-                title = "Blood Glucose",
-                description = "123",
-                iconResId = R.drawable.blood_glucose_icon
-            ) { navCtrl.navigate(EnumScreens.BLOOD_GLUCOSE.route) }
+            // Dynamic list of home items
+            items(
+                listOf(
+                    Triple("Water", "1234", R.drawable.water_bottle),
+                    Triple("Body Composition", "123", R.drawable.bc),
+                    Triple("Blood Pressure", "123", R.drawable.blood_pressure_gauge),
+                    Triple("Blood Glucose", "123", R.drawable.blood_glucose_icon)
+                )
+            ) { (title, description, iconResId) ->
+                HomeItemBox(
+                    title = title,
+                    description = description,
+                    iconResId = iconResId
+                ) {
+                    when (title) {
+                        "Water" -> navCtrl.navigate(EnumScreens.WATER.route)
+                        "Body Composition" -> navCtrl.navigate(EnumScreens.BODY_COMPOSITION.route)
+                        "Blood Pressure" -> navCtrl.navigate(EnumScreens.BLOOD_PRESSURE.route)
+                        "Blood Glucose" -> navCtrl.navigate(EnumScreens.BLOOD_GLUCOSE.route)
+                    }
+                }
+            }
         }
     }
 }
@@ -181,49 +126,59 @@ fun HomeItemBox(
     iconResId: Int,
     navigateToScreen: () -> Unit
 ) {
+    Spacer(modifier = Modifier.height(2.dp))
+
     Box(
         modifier = Modifier
             .height(150.dp)
-            .padding(
-                horizontal = 16.dp,
-                vertical = 4.dp
-            )
+            .padding(horizontal = 12.dp, vertical = 8.dp) // Consistent spacing
             .clip(RoundedCornerShape(16.dp))
             .clickable { navigateToScreen() }
-            .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp))
-            .padding(8.dp)
+            .background(MaterialTheme.colorScheme.tertiaryContainer)
+            .padding(20.dp)
     ) {
+
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.Start
         ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(start = 8.dp)
-            )
-
             Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomStart
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(6.dp) // Add padding as needed
             ) {
-                Image(
-                    painter = painterResource(id = iconResId),
-                    contentDescription = "$title Icon",
+                // Centered vertically on the left
+                Box(
                     modifier = Modifier
-                        .size(64.dp)
-                        .padding(start = 8.dp, bottom = 16.dp),
-                    contentScale = ContentScale.Crop
-                )
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.displayMedium,
+                        .fillMaxHeight()
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.CenterStart // Align text to the start (left) and center vertically
+                ) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontSize = 20.sp, // Adjust font size as needed
+                    )
+                }
+
+                // Bottom-end aligned image
+                Box(
                     modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(end = 8.dp)
-                )
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.BottomEnd // Align image to the bottom-end
+                ) {
+                    Image(
+                        painter = painterResource(id = iconResId),
+                        contentDescription = "$title Icon",
+                        modifier = Modifier
+                            .size(81.dp), // Adjust size as needed
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
+
         }
     }
 }
