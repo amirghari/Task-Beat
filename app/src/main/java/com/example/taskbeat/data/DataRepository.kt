@@ -27,4 +27,6 @@ interface DataRepository {
     suspend fun updateWaterIntake(userId: Long, waterIntake: Int)
 
     suspend fun updateBMI(userId: Long, bmi: Double)
+
+    suspend fun updateBloodGlucose(userId: Long, bloodGlucose: Double)
 }

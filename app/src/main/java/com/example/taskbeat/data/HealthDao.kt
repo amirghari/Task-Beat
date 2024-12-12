@@ -31,4 +31,7 @@ interface HealthDao {
 
     @Query("UPDATE health SET bmi = :bmi WHERE user_id = :userId")
     suspend fun updateBMI(userId: Long, bmi: Double)
+
+    @Query("UPDATE health SET blood_glucose = :bloodGlucose WHERE user_id = :userId")
+    suspend fun updateBloodGlucose(userId: Long, bloodGlucose: Double)
 }

@@ -27,18 +27,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import com.example.taskbeat.R
 import com.example.taskbeat.ui.screens.EnumScreens
-import com.example.taskbeat.ui.screens.TopBar
 import com.example.taskbeat.ui.viewmodels.AppViewModelProvider
 import com.example.taskbeat.ui.viewmodels.home.HomeViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -51,92 +46,16 @@ fun HomeScreen(
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
 
-    val screens = listOf(
-        EnumScreens.STEPS_COUNTER,
-        EnumScreens.WORKOUT_TIME,
-        EnumScreens.BODY_COMPOSITION,
-        EnumScreens.WATER,
-        EnumScreens.BLOOD_PRESSURE,
-        EnumScreens.BLOOD_GLUCOSE,
-    )
-
     Scaffold(
-//        topBar = {
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth() // Ensure the header spans the full width
-//                    .background(MaterialTheme.colorScheme.primary)
-//                    .padding(horizontal = 16.dp, vertical = 8.dp),
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.SpaceBetween
-//            ) {
-//                // Show user profile or Sign In button based on authentication state
-//                if (currentUser != null) {
-//                    // If the user is logged in, show their profile picture or email
-//                    val photoUrl = currentUser.photoUrl
-//                    if (photoUrl != null) {
-//                        // Show profile picture
-//                        Button(
-//                            onClick = {
-//                                navCtrl.navigate(EnumScreens.SIGN_IN.route)
-//                            }
-//                        )
-//                            {
-//                            AsyncImage(
-//                                model = photoUrl,
-//                                contentDescription = "User Profile Picture",
-//                                modifier = Modifier
-//                                    .size(40.dp)
-//                                    .clip(CircleShape)
-//                                    .background(Color.Gray),
-//                                contentScale = ContentScale.Crop
-//                                )
-//                            }
-//                    } else {
-//                        // Show email if profile picture is not available
-//                        Button(
-//                            onClick = {
-//                                navCtrl.navigate(EnumScreens.SIGN_IN.route)
-//                            }
-//                        ) {
-//                            Image(
-//                                painter = painterResource(id = R.drawable.user),
-//                                contentDescription = "User Profile Picture",
-//                                modifier = Modifier
-//                                    .size(40.dp)
-//                                    .clip(CircleShape)
-//                                    .background(Color.Gray),
-//                                contentScale = ContentScale.Crop
-//                            )
-//                        }
-//                    }
-//                } else {
-//                    // If the user is not logged in, show "Sign In" button
-//                    Button(
-//                        onClick = {
-//                            navCtrl.navigate(EnumScreens.SIGN_IN.route)
-//                        }
-//                    ) {
-//                        Text("Sign In", fontSize = 14.sp, fontWeight = FontWeight.Bold)
-//                    }
-//                }
-//
-//                Spacer(modifier = Modifier.weight(1f))
-//
-//                // TopBar navigation actions on the right
-//                TopBar(
-//                    title = "",
-//                    canNavigateBack = false,
-//                    onNavigateUp = { navCtrl.navigateUp() }
-//                )
-//            }
-//        }
+        // Scaffold content if needed
     ) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier
+                .padding(paddingValues)
                 .background(MaterialTheme.colorScheme.surface)
                 .verticalScroll(rememberScrollState())
                 .fillMaxSize()
+                .verticalScroll(scrollState)
         ) {
             Row(
                 modifier = Modifier
@@ -147,6 +66,7 @@ fun HomeScreen(
                     ),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
+                // Example Home Boxes
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -154,7 +74,10 @@ fun HomeScreen(
                         .height(150.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .clickable { navCtrl.navigate(EnumScreens.HEART_RATE.route) }
-                        .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp))
+                        .background(
+                            MaterialTheme.colorScheme.tertiaryContainer,
+                            shape = RoundedCornerShape(16.dp)
+                        )
                         .padding(8.dp)
                 ) {
                     Column(
@@ -163,21 +86,21 @@ fun HomeScreen(
                         horizontalAlignment = Alignment.Start
                     ) {
                         Text(
-                            text = "Heart rate",
+                            text = "Heart Rate",
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(start = 8.dp)
                         )
-
                         Box(
-                            modifier = Modifier
-                                .height(64.dp)
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.BottomEnd
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.BottomStart
                         ) {
-                            Text(
-                                text = "88",
-                                style = MaterialTheme.typography.displayMedium,
-                                modifier = Modifier.padding(end = 8.dp)
+                            Image(
+                                painter = painterResource(id = R.drawable.heart_image),
+                                contentDescription = "Heart Rate Icon",
+                                modifier = Modifier
+                                    .size(64.dp)
+                                    .padding(start = 8.dp, bottom = 16.dp),
+                                contentScale = ContentScale.Crop
                             )
                         }
                     }
@@ -190,7 +113,10 @@ fun HomeScreen(
                         .padding(horizontal = 4.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .clickable { navCtrl.navigate(EnumScreens.LOADING_CHAT.route) }
-                        .background(MaterialTheme.colorScheme.tertiaryContainer, shape = RoundedCornerShape(16.dp))
+                        .background(
+                            MaterialTheme.colorScheme.tertiaryContainer,
+                            shape = RoundedCornerShape(16.dp)
+                        )
                         .padding(8.dp)
                 ) {
                     Column(
@@ -203,19 +129,16 @@ fun HomeScreen(
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(start = 8.dp)
                         )
-
                         Box(
-                            modifier = Modifier
-                                .height(64.dp)
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.BottomEnd
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.BottomStart
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                                contentDescription = "Chat Picture",
+                                painter = painterResource(id = R.drawable.chat),
+                                contentDescription = "Chat Icon",
                                 modifier = Modifier
-                                    .size(100.dp)
-                                    .clip(RoundedCornerShape(8.dp)),
+                                    .size(64.dp)
+                                    .padding(start = 8.dp, bottom = 16.dp),
                                 contentScale = ContentScale.Crop
                             )
                         }
@@ -223,12 +146,30 @@ fun HomeScreen(
                 }
             }
 
-            HomeItemBox("Steps counter", "1234") { navCtrl.navigate(EnumScreens.STEPS_COUNTER.route) }
-            HomeItemBox("Workout time", "12:34") { navCtrl.navigate(EnumScreens.WORKOUT_TIME.route) }
-            HomeItemBox("Water", "1234") { navCtrl.navigate(EnumScreens.WATER.route) }
-            HomeItemBox("Body composition", "123") { navCtrl.navigate(EnumScreens.BODY_COMPOSITION.route) }
-            HomeItemBox("Blood pressure", "123") { navCtrl.navigate(EnumScreens.BLOOD_PRESSURE.route) }
-            HomeItemBox("Blood glucose", "123") { navCtrl.navigate(EnumScreens.BLOOD_GLUCOSE.route) }
+            // Other Home Items with Icons
+            HomeItemBox(
+                title = "Water",
+                description = "1234",
+                iconResId = R.drawable.water_bottle
+            ) { navCtrl.navigate(EnumScreens.WATER.route) }
+
+            HomeItemBox(
+                title = "Body Composition",
+                description = "123",
+                iconResId = R.drawable.bc
+            ) { navCtrl.navigate(EnumScreens.BODY_COMPOSITION.route) }
+
+            HomeItemBox(
+                title = "Blood Pressure",
+                description = "123",
+                iconResId = R.drawable.blood_pressure_gauge
+            ) { navCtrl.navigate(EnumScreens.BLOOD_PRESSURE.route) }
+
+            HomeItemBox(
+                title = "Blood Glucose",
+                description = "123",
+                iconResId = R.drawable.blood_glucose_icon
+            ) { navCtrl.navigate(EnumScreens.BLOOD_GLUCOSE.route) }
         }
     }
 }
@@ -237,6 +178,7 @@ fun HomeScreen(
 fun HomeItemBox(
     title: String,
     description: String,
+    iconResId: Int,
     navigateToScreen: () -> Unit
 ) {
     Box(
@@ -263,15 +205,23 @@ fun HomeItemBox(
             )
 
             Box(
-                modifier = Modifier
-                    .height(64.dp)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.BottomEnd
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomStart
             ) {
+                Image(
+                    painter = painterResource(id = iconResId),
+                    contentDescription = "$title Icon",
+                    modifier = Modifier
+                        .size(64.dp)
+                        .padding(start = 8.dp, bottom = 16.dp),
+                    contentScale = ContentScale.Crop
+                )
                 Text(
                     text = description,
                     style = MaterialTheme.typography.displayMedium,
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = 8.dp)
                 )
             }
         }

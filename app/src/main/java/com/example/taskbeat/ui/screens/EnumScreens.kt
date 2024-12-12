@@ -15,7 +15,7 @@ enum class EnumScreens(val route: String, val displayName: String, val icon: Ima
     BLOOD_PRESSURE("blood_pressure", "BP", Icons.Filled.Info),
     BLOOD_GLUCOSE("blood_glucose", "Glucose", Icons.Filled.AddCircle),
     SIGN_IN("sign_in", "You", Icons.Filled.AccountCircle),
-    LOADING_CHAT("loading_chat", "Chat", Icons.Filled.Star),
+    LOADING_CHAT("loading_chat", "Chat", Icons.Filled.Send),
     CHAT("chat", "", Icons.Filled.Phone);
 
     fun withParams(vararg args: String): String {

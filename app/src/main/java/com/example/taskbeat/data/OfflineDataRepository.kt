@@ -84,4 +84,7 @@ class OfflineDataRepository(
     override suspend fun updateBMI(userId: Long, bmi: Double) {
         healthDao.updateBMI(userId, bmi)
     }
+    override suspend fun updateBloodGlucose(userId: Long, bloodGlucose: Double) {
+        healthDao.updateBloodGlucose(userId, bloodGlucose)
+    }
 }
