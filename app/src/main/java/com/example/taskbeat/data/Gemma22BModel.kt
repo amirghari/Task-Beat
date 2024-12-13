@@ -41,16 +41,18 @@ class Gemma22BModel(
         llmInference = LlmInference.createFromOptions(context, options)
     }
 
-    private val systemEnforcement = "<start_of_turn>system\nYou are an AI called HealthBot resides within a mobile application called TaskBeat that provide health related tips and instructions<end_of_turn>\n"
-    private val userEnforcement = ". Answer with moderate length. If the requests are unrelated to health, politely redirect the conversation to health topics. Always respond in a professional and health-focused manner."
-
-    fun generateResponseAsync(prompt: String) {
-        val insertionPoint = prompt.indexOf("<end_of_turn>")
-        val modifiedUserPrompt = StringBuilder(prompt)
-            .insert(insertionPoint, userEnforcement)
-            .toString()
-        val modifiedMessage = "$systemEnforcement$modifiedUserPrompt\n<start_of_turn>model\n"
-        llmInference.generateResponseAsync(modifiedMessage)
+    fun generateResponseAsync(prompt: String, hrString: String) {
+        val systemEnforcement = "<start_of_turn>system\nYou are an AI called HealthBot " +
+                "resides within a mobile application called TaskBeat " +
+                "that provide health related tips and instructions. " +
+                "If the user is asking for health data relating to heart rate, " +
+                "use the record of their recent heart rate measurement of $hrString to give them tips and instructions. " +
+                "Always answer with moderate length. " +
+                "If the requests are unrelated to health, " +
+                "politely redirect the conversation to health topics. " +
+                "Always respond in a professional and health-focused manner." +
+                "<end_of_turn>\n"
+        llmInference.generateResponseAsync("$systemEnforcement$prompt\n<start_of_turn>model\n")
     }
 
     companion object {
@@ -93,7 +95,6 @@ class Gemma22BModel(
             }
 
             if (targetFile.exists()) {
-                Log.d("DBG", "File already exists")
                 return
             }
 

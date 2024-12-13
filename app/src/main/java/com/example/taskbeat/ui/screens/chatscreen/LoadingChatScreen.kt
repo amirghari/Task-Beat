@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.example.taskbeat.data.Gemma22BModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -43,9 +42,7 @@ fun LoadingChatScreen(onModelLoaded: () -> Unit) {
         withContext(Dispatchers.IO) {
             try {
                 Gemma22BModel.downloadModel(context)
-                delay(2000)
                 isDownloading = false
-                delay(2000)
                 Gemma22BModel.getInstance(context)
 
                 withContext(Dispatchers.Main) {
