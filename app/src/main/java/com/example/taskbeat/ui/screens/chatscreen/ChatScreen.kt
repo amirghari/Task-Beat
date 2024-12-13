@@ -25,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -50,6 +51,7 @@ fun ChatScreen(
 ) {
     val uiState by chatVM.uiState.collectAsStateWithLifecycle()
     val textInputEnabled by chatVM.isTextInputEnabled.collectAsStateWithLifecycle()
+
     ChatInnerScreen(
         uiState,
         textInputEnabled

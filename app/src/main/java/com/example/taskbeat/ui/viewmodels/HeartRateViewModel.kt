@@ -72,16 +72,12 @@ class HeartRateViewModel(
 
         viewModelScope.launch {
             delay(15000) // Measure for 15 seconds
-            var heartRateValue = calculateHeartRateFromFrames()
+            val heartRateValue = calculateHeartRateFromFrames()
             _heartRate.value = heartRateValue
             _isMeasuring.value = false
 
             Log.d("HeartRateViewModel", "Heart rate value: $heartRateValue")
             saveHeartRateToDatabase(heartRateValue)
-
-
-
-
         }
     }
 
