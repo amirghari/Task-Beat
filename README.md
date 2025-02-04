@@ -77,6 +77,22 @@ TaskBeat follows a **Model-View-ViewModel (MVVM)** architecture to ensure clean,
 
 ---
 
+## **App Screenshots 📱**
+
+Below are key screens from TaskBeat, demonstrating its **health monitoring, AI-powered recommendations, task management, and user-friendly UI.**
+
+| ![Screen 1](path/to/TaskBeat1.jpg) | ![Screen 2](path/to/TaskBeat2.jpg) | ![Screen 3](path/to/TaskBeat3.jpg) |  
+|----------------------------------|----------------------------------|----------------------------------|  
+| **Home Dashboard**               | **Heart Rates**                  | **User**   |  
+
+| ![Screen 4](path/to/TaskBeat4.jpg) | ![Screen 5](path/to/TaskBeat5.jpg) | ![Screen 6](path/to/TaskBeat6.jpg) |  
+|----------------------------------|----------------------------------|----------------------------------|  
+| **BMI**                          | **Water Intake**                 | **Blood Pressure**           |  
+
+| ![Screen 7](path/to/TaskBeat7.jpg) |  
+|----------------------------------|  
+| **AI Health Recommendations**    |  
+
 ## **Getting Started**
 
 ### **1. Prerequisites**
