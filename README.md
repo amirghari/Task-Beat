@@ -81,17 +81,21 @@ TaskBeat follows a **Model-View-ViewModel (MVVM)** architecture to ensure clean,
 
 Below are key screens from TaskBeat, demonstrating its **health monitoring, AI-powered recommendations, task management, and user-friendly UI.**
 
-| ![Screen 1](/TaskBeat1.jpg) | ![Screen 2](/TaskBeat2.jpg) | ![Screen 3](/TaskBeat3.jpg) |  
-|----------------------------------|----------------------------------|----------------------------------|  
-| **Home Dashboard**               | **Heart Rates**                  | **User**   |  
+<p align="center">
+  <img src="/TaskBeat1.jpg" alt="Home Dashboard" width="250" height="500">
+  <img src="/TaskBeat2.jpg" alt="Heart Rates" width="250" height="500">
+  <img src="/TaskBeat3.jpg" alt="User Profile" width="250" height="500">
+</p>
 
-| ![Screen 4](/TaskBeat4.jpg) | ![Screen 5](/TaskBeat5.jpg) | ![Screen 6](/TaskBeat6.jpg) |  
-|----------------------------------|----------------------------------|----------------------------------|  
-| **BMI**                          | **Water Intake**                 | **Blood Pressure**           |  
+<p align="center">
+  <img src="/TaskBeat4.jpg" alt="BMI" width="250" height="500">
+  <img src="/TaskBeat5.jpg" alt="Water Intake" width="250" height="500">
+  <img src="/TaskBeat6.jpg" alt="Blood Pressure" width="250" height="500">
+</p>
 
-| ![Screen 7](/TaskBeat7.jpg) |  
-|----------------------------------|  
-| **AI Health Recommendations**    |  
+<p align="center">
+  <img src="/TaskBeat7.jpg" alt="AI Health Recommendations" width="250" height="500">
+</p>
 
 ## **Getting Started**
 
